@@ -20,7 +20,7 @@ def send_command(command):
     print(f'Befehl "{command}" gesendet')
 
 while True:
-    command = input('Gib "AN", "AUS" oder "BLINK" ein für LED. Sonst Text: ').strip().upper()
+    command = input('Gib "AN", "AUS" oder "BLINK" ein für LED. Gib "CLEAN" fuer OLED ein. Sonst Text: ').strip().upper()
     send_command(command)
 
     if command in ['X']:
