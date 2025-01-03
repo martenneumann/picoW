@@ -3,7 +3,7 @@ import logger
 import utime
 import _thread
 
-from machine import Pin
+from machine import Pin, PWM
 
 ########################################################################################################
 #    Hier werden die GPIO Pins definiert
@@ -11,14 +11,21 @@ from machine import Pin
 pin_Ack 			= Pin(0, Pin.IN) 
 pin_Req 			= Pin(1, Pin.OUT) 
 pin_Lichtschranke 	= Pin(2, Pin.IN)
+pin_GleisIn1		= Pin(3, Pin.OUT)
+pin_GleisIn2		= Pin(4, Pin.OUT)
+pin_GleisPwm		= PWM(Pin(6))
 
 ########################################################################################################
 #   Globale Variablen
 ########################################################################################################
 stop_flagLichtschranke 	= False
 lSchranke_keinZug 		= 1 # objErkannt == 0 obNichtErkannt ==1
+weicheAuf				= 1
+weicheZu				= 0
 gleisEinfahrt			= 1
 gleisAusfahrt			= 0
+gleisTraegerFrequenz	= 100
+gleisDutyProzent		= 100
 
 
 # Klasse für Sensoren (Ersatz für Enum)
@@ -75,10 +82,18 @@ def lichtschranknÜberwachungStoppen():
 ########################################################################################################
 # 
 ########################################################################################################    
-def oeffneWeiche():
+def weicheSteuern(position):
     #TODO
-    if lSchranke_keinZug:
-        logger.log("Oeffne Weiche", "WEICHE")
+    if lSchranke_keinZug == 0 :
+        logger.log("Weiche oeffnen erlaubt aber Zug im Weichenbereich. EXIT -1", "ERR")
+        exit -1
+        
+    if position == weicheAuf :
+        logger.log("Weiche oeffnen", "WEICHE")
+        
+    if position == weicheZu :
+        logger.log("Weiche schliessen", "WEICHE")
+    
     return True
 
 ########################################################################################################
@@ -97,6 +112,22 @@ def gleiseUnterStrom(richtung):
         logger.log("Setzte gleise für EINFAHRT Unter Strom.", "H_Brücke")
     elif richtung == gleisAusfahrt:
         logger.log("Setzte gleise für AUSFAHRT Unter Strom.", "H_Brücke")
+        
+
+    
+        
+########################################################################################################
+#
+#    Wandelt einen Prozentwert (0 bis 100%) in einen uint16-Wert (0 bis 65535) um.
+#
+#    Args:
+#        percentage (float): Der Prozentwert (0.0 bis 100.0)
+#
+#    Returns:
+#        int: Der entsprechende uint16-Wert (0 bis 65535).
+########################################################################################################            
+def prozen2u16(percentage):
+    return int((percentage / 100) * 65535)       
 
 ########################################################################################################
 if __name__ == "__main__":
@@ -109,12 +140,12 @@ if __name__ == "__main__":
         
         # Warte auf die erlaubniss die Weiche zu öffnen
         if weichenOeffnenAnfragen():
-            oeffneWeiche()
+            weicheSteuern(weicheAuf)
         
         
         warteAufZug()
         gleiseUnterStrom(gleisEinfahrt)
-
+        
         
 
         lichtschranknÜberwachungStoppen()
