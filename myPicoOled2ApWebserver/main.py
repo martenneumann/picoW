@@ -3,69 +3,22 @@ import network
 import socket
 from machine import Pin, I2C, reset
 import time
-import sh1106
+
 
 #------------------------------------------------------------------------
 #config
-ssid = "my_pico"
+ssid = "my_pico2"
 pwd  = "12345678"
-sdaPin = 4
-sclPin = 5
-hoeheZeile = 10
 #------------------------------------------------------------------------
-
-i2c = I2C(0, sda=Pin(sdaPin), scl=Pin(sclPin))
-oled = sh1106.SH1106_I2C(128, 64, i2c)
-
-oled.fill(0)
-oled.show()
-
-led = Pin("LED", Pin.OUT)
-
-def scrolle_hoch(in_px):
-    for i in range(in_px):
-        oled.scroll(0, -1)
-        oled.show()
-        time.sleep(0.05)
-
-def display_message(message, zeile=0):
-    if zeile == 0:
-        oled.fill(0)    
-    oled.text(message, 0, (zeile * hoeheZeile))
-    if message == 'CLEAN' : oled.fill(0) 
-    oled.show()
-
-def my_log(msg, zeile=0):
-    display_message(msg, zeile)
-    print(msg)
-    
-my_log("AP + Webserv", 0)    
-
-def tuWas(command):
-    if command == "AN":
-        led.on()
-    elif command == "AUS":
-        led.off()
-    elif command == "BLINK":
-        for _ in range(5):
-            led.on()
-            time.sleep(0.5)
-            led.off()
-            time.sleep(0.5)
-    elif command == "CLOSE":
-        #cl.close()
-        #time.sleep(2)
-        my_log("Reset von serv", 0)
-        #reset()
-
+print("Hallo")
 def test_ap(ap):
     if ap.active():
-        my_log("Access Point ist aktiv.", 1)
-        my_log(f"SSID: {ap.config('essid')}", 2)
-        my_log(f"IP: {ap.ifconfig()[0]}", 3)
-        my_log('pwd : 12345678', 4)
+        print("Access Point ist aktiv.")
+        print(f"SSID: {ap.config('essid')}")
+        print(f"IP: {ap.ifconfig()[0]}")
+        print('pwd : 12345678')
     else:
-        my_log("Access Point ist nicht aktiv.", 1)
+        print("Access Point ist nicht aktiv.")
 
 def setup_ap():
     ap = network.WLAN(network.AP_IF)
@@ -84,7 +37,7 @@ def start_webserver(ip):
     s.listen(1)
 
     print('Webserver gestartet auf http://{}'.format(ip))
-    display_message("Webserver run!", 5)
+
     
     while True:
         cl, client_addr = s.accept()
