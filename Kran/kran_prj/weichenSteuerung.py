@@ -1,3 +1,10 @@
+########################################################################################################
+#   SG90
+#	Braun	= GND
+#	Rot		= VCC
+#	Gelb	= SIG (Pin 20 GPI15)
+########################################################################################################
+
 import logger
 import utime
 import sensorUeberwachung
@@ -36,6 +43,13 @@ def weicheSchliessen():
     weicheSteuern(weicheZu)
     
 ########################################################################################################
+# 
+########################################################################################################    
+def weicheInitalSchliessen():
+    logger.log("Stelle sicher das Weiche geschlossen ist", "WEICHE")
+    weicheSteuern(weicheZu)    
+    
+########################################################################################################
 # Code aus mail "micropython Programme" vom 25.09.2024 - 08:20
 ########################################################################################################    
 def weicheSteuern(position):
@@ -45,13 +59,9 @@ def weicheSteuern(position):
         sensorUberwachungStoppen()
         exit -1
         
-    if position == weicheAuf :
-        print("AUF")
-        pwm.duty_ns(1500000)								# Endanschlag der Weiche, Einlesen der Pulswerte, Stellung des Ruderhorns
-    if position == weicheZu :
-        print("ZU")
-        pwm.duty_ns(1300000)								# Weiche links, Endanschlag der Weiche
-    return True
+    if position == weicheAuf: pwm.duty_ns(1500000)	# Endanschlag der Weiche, Einlesen der Pulswerte, Stellung des Ruderhorns
+    if position == weicheZu : pwm.duty_ns(1300000)	# Weiche links, Endanschlag der Weiche
+
 
 
 

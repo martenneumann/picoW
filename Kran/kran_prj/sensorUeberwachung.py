@@ -1,12 +1,13 @@
 import logger
 import utime
+import _thread
 from machine import Pin
 
 ########################################################################################################
 #    Hier werden die GPIO Pins definiert
 ########################################################################################################
 pin_Lichtschranke 	= Pin(2, Pin.IN)
-pin_ReedSchalter	= Pin(7, Pin.IN)
+pin_ReedSchalter	= Pin(22, Pin.IN)
 
 ########################################################################################################
 #   Globale Variablen
@@ -19,13 +20,19 @@ reedSchalter_ZugErkannt	= 0 # objErkannt == 1 obNichtErkannt == 0
 # Reed
 ######################################################################################################## 
 def sensorUberwachungStarten():
+    _thread.start_new_thread(sensorUberwachungsLoop, ())  
+    utime.sleep(1) #Gegen Kernkonflikt
+        
+########################################################################################################
+# Reed
+######################################################################################################## 
+def sensorUberwachungsLoop():        
     global stop_flagThread1
     logger.log("Sensor ueberwachungs Thread geastartent", "INFO")
     while not stop_flagThread1:
         lichtschrankeUeberwachen()
         reedSchalterUeberwachen()
-        utime.sleep(1)
-        
+        utime.sleep(1)    
         
 ########################################################################################################
 # 

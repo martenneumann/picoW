@@ -1,10 +1,10 @@
 # main.py
 import logger
 import stellwAnfrage
-import motorenSteuern
+import weichenSteuerung
 import sensorUeberwachung
 import utime
-import _thread
+
 
 from machine import Pin, PWM
 
@@ -29,7 +29,7 @@ gleisDutyProzent		= 100
 ########################################################################################################
 # 
 ########################################################################################################    
-def warteAufZug():
+def warteAufZugImWeichenbereich():
     logger.log("Warten auf Zugeinfahrt in Weichenbereich", "L-SCHRANKE")
     while (sensorUeberwachung.lSchranke_ZugErkannt != 1) : utime.sleep(1)
     logger.log("Zug im offenen Weichenbereich erkannt", "L-SCHRANKE")
@@ -62,21 +62,24 @@ def prozen2u16(percentage):
 ########################################################################################################
 if __name__ == "__main__":
     #while(True):
+        # INIT
         logger.log("Kran Programm gestartet.", "INFO")
+        weichenSteuerung.weicheInitalSchliessen()
         
-        # Starte Lichtschranken ueberwachung
-        _thread.start_new_thread(sensorUeberwachung.sensorUberwachungStarten, ())
-        utime.sleep(1) #  Gegen Kernkonflikt
+        # Starte Sensor ueberwachung
+        sensorUeberwachung.sensorUberwachungStarten()
         
         # Warte auf die erlaubniss die Weiche zu öffnen
         stellwAnfrage.weichenOeffnenErlaubtAnfragenAntwortAbwarten()
-        motorenSteuern.weicheOeffnen()
+        weichenSteuerung.weicheOeffnen()
         
-        
-        warteAufZug()
+        warteAufZugImWeichenbereich()
         gleiseUnterStrom(gleisEinfahrt)
         #TODO Bremsen
         
+        # Warte auf die erlaubniss die Weiche zu schliessen
+        stellwAnfrage.weichenSchliessenErlaubtAnfragenAntwortAbwarten()
+        weichenSteuerung.weicheSchliessen()
 
         sensorUeberwachung.sensorUberwachungStoppen()
         utime.sleep(1) #  Damit Kern1 vor Kern0 (main) beendet wird

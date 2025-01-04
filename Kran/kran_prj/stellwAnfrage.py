@@ -26,4 +26,13 @@ def weichenOeffnenErlaubtAnfragenAntwortAbwarten():
     logger.log("weichenOeffnenAnfragen::Darf Weiche geoeffnet werden? Warte aktiv auf OK!!!", "REQ") 
     if anfrageStellenAntwortAbwarten():
         logger.log("weichenOeffnenAnfragen::Weiche oeffnen erlaubt", "ACK")
-        return True    
+        return True
+    
+########################################################################################################
+# 
+########################################################################################################
+def weichenSchliessenErlaubtAnfragenAntwortAbwarten():
+    logger.log("weichenSchliessenErlaubtAnfragenAntwortAbwarten::Darf Weiche geschlossen werden? Warte aktiv auf OK!!!", "REQ") 
+    if anfrageStellenAntwortAbwarten():
+        logger.log("weichenSchliessenErlaubtAnfragenAntwortAbwarten::Weiche schliessen erlaubt", "ACK")
+        return True     
