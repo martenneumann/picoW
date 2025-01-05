@@ -24,7 +24,8 @@ def anfrageStellenAntwortAbwarten():
 # 
 ########################################################################################################
 def weichenOeffnenErlaubtAnfragenAntwortAbwarten():
-    logger.log("WeichenOeffnenAnfragen::Darf Weiche geoeffnet werden? Warte aktiv auf OK!!!", "REQ") 
+    logger.log("WeichenOeffnenAnfragen::Darf Weiche geoeffnet werden? Warte aktiv auf OK!!!", "REQ")
+    logger.log("Zur Simulation kann PIN 1 / GPIO 0 mit 5V VCC verbunden werden. Dann wieder ziehen", "REQ") 
     if anfrageStellenAntwortAbwarten():
         logger.log("WeichenOeffnenAnfragen::Weiche oeffnen erlaubt", "ACK")
         return True

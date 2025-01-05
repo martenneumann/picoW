@@ -21,8 +21,8 @@ stepsHarken 			= 1500				# Hierüber lässt sich einstellen wie viel Faden von d
 delayHarken 			= float(0.002)		# Geschwindigkeit mit der der Faden abgerollt werden soll. 0.001 max geschwindigkeit
 richtungHarkenHoch		= 1					# Winde wickelt Faden auf
 richtungHarkenRunter	= -1				# Winde wickelt Faden ab
-stepsTurm				= 260				# Hierüber lässt sich einstellen wie weit der Turm gedreht werden soll. 220 ca 180 Grad.
-delayTurm				= float(0.005)		# Geschwindigkeit mit der der Turm rotieren soll. 0.001 max geschwindigkeit
+stepsTurn180Grad		= 260				# Hierüber lässt sich einstellen wie weit der Turm gedreht werden soll. 220 ca 180 Grad.
+delayTurn				= float(0.005)		# Geschwindigkeit mit der der Turm rotieren soll. 0.001 max geschwindigkeit
 richtungTurmDrehtRechts	= 1					# Turm dreht sich nach Rechts
 richtungTurmDrehtLinks	= -1				# Turm dreht sich nach Links
 gleisstromZugRein		= 1					# Wie rum sollen die Gleise unter Strom. 1 == Zug Rein, 0 == Zug Raus

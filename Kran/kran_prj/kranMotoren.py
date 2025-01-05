@@ -58,33 +58,33 @@ def cleanup(pin):
 ########################################################################################################
 # 
 ########################################################################################################
-def fahreHarkenHoch() :
-    logger.log("Harken runter fahren", "HARKEN_MOTOR")
-    step_motor(pins_winde, const.stepsHarken, const.delayHarken, const.richtungHarkenHoch)
-    cleanup(pins_winde)
-
-########################################################################################################
-# 
-########################################################################################################
-def fahreHarkenRunter() :
+def fahreHarkenHoch(steps = const.stepsHarken, speed = const.delayHarken) :
     logger.log("Harken hoch fahren", "HARKEN_MOTOR")
-    step_motor(pins_winde, const.stepsHarken, const.delayHarken, const.richtungHarkenRunter)
+    step_motor(pins_winde, steps, speed, const.richtungHarkenHoch)
     cleanup(pins_winde)
 
 ########################################################################################################
 # 
 ########################################################################################################
-def rotiereTurmLinks() :
+def fahreHarkenRunter(steps = const.stepsHarken, speed = const.delayHarken) :
+    logger.log("Harken runter fahren", "HARKEN_MOTOR")
+    step_motor(pins_winde, steps, speed, const.richtungHarkenRunter)
+    cleanup(pins_winde)
+
+########################################################################################################
+# 
+########################################################################################################
+def rotiereTurmLinks(steps = const.stepsTurn180Grad, speed = const.delayTurn) :
     logger.log("Rotiere Turm Links", "TURM_MOTOR")
-    step_motor(pins_turm, const.stepsTurm, const.delayTurm, const.richtungTurmDrehtLinks)
+    step_motor(pins_turm, steps, speed, const.richtungTurmDrehtLinks)
     cleanup(pins_turm)       
 
 ########################################################################################################
 # 
 ########################################################################################################
-def rotiereTurmRecht() :
+def rotiereTurmRecht(steps = const.stepsTurn180Grad, speed = const.delayTurn) :
     logger.log("Rotiere Turm Rechts", "TURM_MOTOR")
-    step_motor(pins_turm, const.stepsTurm, const.delayTurm, const.richtungTurmDrehtRechts)
+    step_motor(pins_turm, steps, speed, const.richtungTurmDrehtRechts)
     cleanup(pins_turm)
     
  

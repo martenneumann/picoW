@@ -6,13 +6,14 @@ import weichenSteuerung
 import sensorUeberwachung
 import utime
 import kranMotoren
+import ladeZyklen
 
 
 ########################################################################################################
 # 
 ########################################################################################################    
 def warteAufZugImWeichenbereich():
-    logger.log("Warten auf Zugeinfahrt in Weichenbereich", "L-SCHRANKE")
+    logger.log("Warten auf Zugeinfahrt in Weichenbereich (Lichtschranke Blockiert)", "INFO")
     while (sensorUeberwachung.lSchranke_ZugErkannt != 1) : utime.sleep(1)
     logger.log("Zug im offenen Weichenbereich erkannt", "L-SCHRANKE")
 
@@ -20,11 +21,12 @@ def warteAufZugImWeichenbereich():
 # 
 ########################################################################################################    
 def gleiseUnterStrom(richtung):
-    if richtung == gleisEinfahrt:
+    if richtung == const.gleisstromZugRein:
         logger.log("Setzte gleise für EINFAHRT Unter Strom.", "H_Brücke")
-    elif richtung == gleisAusfahrt:
+    elif richtung == const.gelisstromZugRaus:
         logger.log("Setzte gleise für AUSFAHRT Unter Strom.", "H_Brücke")
-    #TODO    
+    #TODO
+        
 
     
       
@@ -44,10 +46,11 @@ if __name__ == "__main__":
         weichenSteuerung.weicheOeffnen()
         
         warteAufZugImWeichenbereich()
-        gleiseUnterStrom(const.gleisEinfahrt)
+        gleiseUnterStrom(const.gleisstromZugRein)
         #TODO Bremsen
+        #ToDO ReetKontakt
         
-        kranMotoren.fahreHarkenRunter()
+        ladeZyklen.fahreEntladeZyclus()  
         
         # Warte auf die erlaubniss die Weiche zu schliessen
         stellwAnfrage.weichenSchliessenErlaubtAnfragenAntwortAbwarten()
