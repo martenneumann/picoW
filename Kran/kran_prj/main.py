@@ -4,6 +4,7 @@ import stellwAnfrage
 import weichenSteuerung
 import sensorUeberwachung
 import utime
+import kranMotoren
 
 
 from machine import Pin, PWM
@@ -76,6 +77,8 @@ if __name__ == "__main__":
         warteAufZugImWeichenbereich()
         gleiseUnterStrom(gleisEinfahrt)
         #TODO Bremsen
+        
+        kranMotoren.fahreHarkenRunter()
         
         # Warte auf die erlaubniss die Weiche zu schliessen
         stellwAnfrage.weichenSchliessenErlaubtAnfragenAntwortAbwarten()

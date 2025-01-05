@@ -19,7 +19,7 @@ from time import sleep
 weicheAuf				= 1
 weicheZu				= 0
 # GPIO für Steuersignal
-servo_pin 	= 15										# Steuerung des Servos
+servo_pin 	= 17										# Steuerung des Servos
 
 
 ########################################################################################################
@@ -61,6 +61,7 @@ def weicheSteuern(position):
         
     if position == weicheAuf: pwm.duty_ns(1500000)	# Endanschlag der Weiche, Einlesen der Pulswerte, Stellung des Ruderhorns
     if position == weicheZu : pwm.duty_ns(1300000)	# Weiche links, Endanschlag der Weiche
+
 
 
 

@@ -3,10 +3,10 @@ import utime
 
 if __name__ == "__main__":
     while True:
-        richtung = input("Gebe O fuer Oeffnen oder S fuer Schliessen ein : ")
-        if richtung == "O":
+        eingabe = input("Gebe 1 fuer Oeffnen; 0 (Null) fuer Schliessen : ")
+        if eingabe == "0":
             weichenSteuerung.weicheOeffnen()
-        elif richtung == "S":    
+        elif eingabe == "1":    
             weichenSteuerung.weicheSchliessen()
         else :
             print("Fehleingabe")
