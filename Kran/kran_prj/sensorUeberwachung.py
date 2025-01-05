@@ -1,4 +1,5 @@
 import logger
+import const
 import utime
 import _thread
 from machine import Pin
@@ -6,8 +7,8 @@ from machine import Pin
 ########################################################################################################
 #    Hier werden die GPIO Pins definiert
 ########################################################################################################
-pin_Lichtschranke 	= Pin(2, Pin.IN)
-pin_ReedSchalter	= Pin(22, Pin.IN)
+pin_Lichtschranke	= Pin(const.gpio_LichtschrankeLesen, Pin.IN)
+pin_ReedSchalter	= Pin(const.gpio_ReetSchalterLesen, Pin.IN)
 
 ########################################################################################################
 #   Globale Variablen
@@ -32,7 +33,7 @@ def sensorUberwachungsLoop():
     while not stop_flagThread1:
         lichtschrankeUeberwachen()
         reedSchalterUeberwachen()
-        utime.sleep(1)    
+        utime.sleep_ms(50)    
         
 ########################################################################################################
 # 

@@ -1,12 +1,13 @@
 import utime
+import const
 import logger
 from machine import Pin
 
 ########################################################################################################
 #    Hier werden die GPIO Pins definiert
 ########################################################################################################
-pin_Ack 			= Pin(0, Pin.IN) 
-pin_Req 			= Pin(1, Pin.OUT)
+pin_Ack = Pin(const.gpio_stellwAck, Pin.IN) 
+pin_Req = Pin(const.gpio_stellwReq, Pin.OUT)
 
 ########################################################################################################
 # 
@@ -14,25 +15,25 @@ pin_Req 			= Pin(1, Pin.OUT)
 def anfrageStellenAntwortAbwarten():
      pin_Req.value(1)
      utime.sleep(1) #  Gegen Tasten Prellen
-     while(pin_Ack.value() != 1): utime.sleep(1)
+     while(pin_Ack.value() != 1): utime.sleep_ms(10)
      pin_Req.value(0)
-     while(pin_Ack.value() != 0): utime.sleep(1)
+     while(pin_Ack.value() != 0): utime.sleep_ms(10)
      return True
     
 ########################################################################################################
 # 
 ########################################################################################################
 def weichenOeffnenErlaubtAnfragenAntwortAbwarten():
-    logger.log("weichenOeffnenAnfragen::Darf Weiche geoeffnet werden? Warte aktiv auf OK!!!", "REQ") 
+    logger.log("WeichenOeffnenAnfragen::Darf Weiche geoeffnet werden? Warte aktiv auf OK!!!", "REQ") 
     if anfrageStellenAntwortAbwarten():
-        logger.log("weichenOeffnenAnfragen::Weiche oeffnen erlaubt", "ACK")
+        logger.log("WeichenOeffnenAnfragen::Weiche oeffnen erlaubt", "ACK")
         return True
     
 ########################################################################################################
 # 
 ########################################################################################################
 def weichenSchliessenErlaubtAnfragenAntwortAbwarten():
-    logger.log("weichenSchliessenErlaubtAnfragenAntwortAbwarten::Darf Weiche geschlossen werden? Warte aktiv auf OK!!!", "REQ") 
+    logger.log("WeichenSchliessenErlaubtAnfragenAntwortAbwarten::Darf Weiche geschlossen werden? Warte aktiv auf OK!!!", "REQ") 
     if anfrageStellenAntwortAbwarten():
-        logger.log("weichenSchliessenErlaubtAnfragenAntwortAbwarten::Weiche schliessen erlaubt", "ACK")
+        logger.log("WeichenSchliessenErlaubtAnfragenAntwortAbwarten::Weiche schliessen erlaubt", "ACK")
         return True     

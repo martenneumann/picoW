@@ -1,18 +1,24 @@
 from machine import Pin
+import const
 import logger
 import time
 
 
-steps 	= 1500
-delay 	= float(0.002)
+########################################################################################################
+#    Hier werden die GPIO Pins definiert
+########################################################################################################
+pins_winde = [
+    Pin(const.gpio_windenMotorIn1, Pin.OUT),  # IN1
+    Pin(const.gpio_windenMotorIn2, Pin.OUT),  # IN2
+    Pin(const.gpio_windenMotorIn3, Pin.OUT),  # IN3
+    Pin(const.gpio_windenMotorIn4, Pin.OUT),  # IN4
+]
 
-
-# GPIO-Pin-Definitionen
-pins = [
-    Pin(13, Pin.OUT),  # IN1
-    Pin(12, Pin.OUT),  # IN2
-    Pin(11, Pin.OUT),  # IN3
-    Pin(10, Pin.OUT),  # IN4
+pins_turm = [
+    Pin(const.gpio_turmMotorIn1, Pin.OUT),  # IN1
+    Pin(const.gpio_turmMotorIn2, Pin.OUT),  # IN2
+    Pin(const.gpio_turmMotorIn3, Pin.OUT),  # IN3
+    Pin(const.gpio_turmMotorIn4, Pin.OUT),  # IN4
 ]
 
 # Sequenz für den ULN2003 (Halbschrittmodus)
@@ -27,35 +33,59 @@ SEQUENCE = [
     [1, 0, 0, 1],
 ]
 
-def set_step(sequence):
-    """Setzt die Pins gemäß der übergebenen Sequenz."""
+########################################################################################################
+# 
+########################################################################################################
+def set_step(pins, sequence):
     for pin, value in zip(pins, sequence):
         pin.value(value)
 
-def step_motor(steps, delay, direction=1):
-    """
-    Bewegt den Motor um eine bestimmte Anzahl von Schritten.
-
-    :param steps: Anzahl der Schritte.
-    :param delay: Verzögerung zwischen den Schritten in Sekunden.
-    :param direction: Richtung des Motors (1 = vorwärts, -1 = rückwärts).
-    """
+########################################################################################################
+# 
+########################################################################################################
+def step_motor(pin, steps, delay, direction):
     for _ in range(steps):
         for step in (SEQUENCE if direction == 1 else reversed(SEQUENCE)):
-            set_step(step)
-            time.sleep(delay)
+            set_step(pin, step)
+            time.sleep(delay)      
 
-def cleanup():
-    """Setzt alle Pins auf 0, um den Motor zu stoppen."""
-    set_step([0, 0, 0, 0])
+########################################################################################################
+# 
+########################################################################################################
+def cleanup(pin):
+    set_step(pin, [0, 0, 0, 0])
 
+########################################################################################################
+# 
+########################################################################################################
 def fahreHarkenHoch() :
-    logger.log("Harken runter fahren", "H_MOTOR")
-    step_motor(steps, delay, 1)
-    cleanup()
-    
+    logger.log("Harken runter fahren", "HARKEN_MOTOR")
+    step_motor(pins_winde, const.stepsHarken, const.delayHarken, const.richtungHarkenHoch)
+    cleanup(pins_winde)
+
+########################################################################################################
+# 
+########################################################################################################
 def fahreHarkenRunter() :
-    logger.log("Harken hoch fahren", "H_MOTOR")
-    step_motor(steps, delay, -1)
-    cleanup()
+    logger.log("Harken hoch fahren", "HARKEN_MOTOR")
+    step_motor(pins_winde, const.stepsHarken, const.delayHarken, const.richtungHarkenRunter)
+    cleanup(pins_winde)
+
+########################################################################################################
+# 
+########################################################################################################
+def rotiereTurmLinks() :
+    logger.log("Rotiere Turm Links", "TURM_MOTOR")
+    step_motor(pins_turm, const.stepsTurm, const.delayTurm, const.richtungTurmDrehtLinks)
+    cleanup(pins_turm)       
+
+########################################################################################################
+# 
+########################################################################################################
+def rotiereTurmRecht() :
+    logger.log("Rotiere Turm Rechts", "TURM_MOTOR")
+    step_motor(pins_turm, const.stepsTurm, const.delayTurm, const.richtungTurmDrehtRechts)
+    cleanup(pins_turm)
+    
+ 
 

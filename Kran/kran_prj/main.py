@@ -1,30 +1,11 @@
 # main.py
 import logger
+import const
 import stellwAnfrage
 import weichenSteuerung
 import sensorUeberwachung
 import utime
 import kranMotoren
-
-
-from machine import Pin, PWM
-
-########################################################################################################
-#    Hier werden die GPIO Pins definiert
-########################################################################################################
-pin_GleisIn1		= Pin(3, Pin.OUT)
-pin_GleisIn2		= Pin(4, Pin.OUT)
-pin_GleisPwm		= PWM(Pin(6))
-
-
-########################################################################################################
-#   Globale Variablen
-########################################################################################################
-gleisEinfahrt			= 1
-gleisAusfahrt			= 0
-gleisTraegerFrequenz	= 100
-gleisDutyProzent		= 100
-
 
 
 ########################################################################################################
@@ -46,19 +27,7 @@ def gleiseUnterStrom(richtung):
     #TODO    
 
     
-        
-########################################################################################################
-#
-#    Wandelt einen Prozentwert (0 bis 100%) in einen uint16-Wert (0 bis 65535) um.
-#
-#    Args:
-#        percentage (float): Der Prozentwert (0.0 bis 100.0)
-#
-#    Returns:
-#        int: Der entsprechende uint16-Wert (0 bis 65535).
-########################################################################################################            
-def prozen2u16(percentage):
-    return int((percentage / 100) * 65535)       
+      
 
 ########################################################################################################
 if __name__ == "__main__":
@@ -75,7 +44,7 @@ if __name__ == "__main__":
         weichenSteuerung.weicheOeffnen()
         
         warteAufZugImWeichenbereich()
-        gleiseUnterStrom(gleisEinfahrt)
+        gleiseUnterStrom(const.gleisEinfahrt)
         #TODO Bremsen
         
         kranMotoren.fahreHarkenRunter()

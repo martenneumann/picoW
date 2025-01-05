@@ -4,43 +4,33 @@
 #	Rot		= VCC
 #	Gelb	= SIG (Pin 20 GPI15)
 ########################################################################################################
-
 import logger
 import utime
+import const
 import sensorUeberwachung
 
-# @GEM Weichensteuerung 
 from machine import Pin, PWM
 from time import sleep
 
 ########################################################################################################
-#   Globale Variablen
-########################################################################################################
-weicheAuf				= 1
-weicheZu				= 0
-# GPIO für Steuersignal
-servo_pin 	= 15										# Steuerung des Servos
-
-
-########################################################################################################
 #    Hier werden die GPIO Pins definiert
 ########################################################################################################
-pwm 		= PWM(Pin(servo_pin))							# PWM-Modulatation
-pwm.freq(50)										# Frequenz
+pin_weichenMotor 		= PWM(Pin(const.gpio_weichenMotor))		# PWM-Modulatation
+pin_weichenMotor.freq(const.weichenMotorTraegerFrq)				# Traeeger  Frequenz
 
 ########################################################################################################
 # 
 ########################################################################################################    
 def weicheOeffnen():
     logger.log("Weiche oeffnen", "WEICHE")
-    weicheSteuern(weicheAuf)
+    weicheSteuern(const.richtungWeicheAuf)
     
 ########################################################################################################
 # 
 ########################################################################################################    
 def weicheSchliessen():
     logger.log("Weiche schliessen", "WEICHE")
-    weicheSteuern(weicheZu)
+    weicheSteuern(const.richtungWeicheZu)
     
 ########################################################################################################
 # 
@@ -59,8 +49,8 @@ def weicheSteuern(position):
         sensorUberwachungStoppen()
         exit -1
         
-    if position == weicheAuf: pwm.duty_ns(1500000)	# Endanschlag der Weiche, Einlesen der Pulswerte, Stellung des Ruderhorns
-    if position == weicheZu : pwm.duty_ns(1300000)	# Weiche links, Endanschlag der Weiche
+    if position == const.richtungWeicheAuf: pin_weichenMotor.duty_ns(const.endlageWeicheAuf)	# Weiche auffahren
+    if position == const.richtungWeicheZu : pin_weichenMotor.duty_ns(const.endlageWeicheZu)		# Weiche zufahren
 
 
 
