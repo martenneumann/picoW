@@ -34,7 +34,30 @@ def prozent2dutycycle(percent):
 def setzeHbrueckenPins(rechts = 0, links = 0):
     pin_hBrueckeRechts.value(rechts)
     pin_hBrueckeLinks.value(links)
+
+########################################################################################################
+#    
+########################################################################################################
+def stoppeZugViaClk():
+    logger.log("Stoppe Zug via Timer (Clk)", "H_BRUECKE")
+    stoppeZug()
     
+########################################################################################################
+#    
+########################################################################################################
+def stoppeZugViaReedschalter():
+    logger.log("Stoppe Zug via ReedSchalter", "H_BRUECKE")
+    stoppeZug()
+    return True
+
+########################################################################################################
+#    
+########################################################################################################
+def stoppeZugViaLichtschranke():
+    logger.log("Gleise Stromlos, Zug hat bereich verlassen", "H_BRUECKE")
+    stoppeZug()
+    return True
+
 ########################################################################################################
 #    
 ########################################################################################################
@@ -45,17 +68,36 @@ def stoppeZug():
 ########################################################################################################
 #    
 ########################################################################################################
-def bewegeZug(richtung, speedInProzent, abbruchzeitInMs):
-    if richtung == gleisstromZugRein : setzeHbrueckenPins(1, 0) #TODO CHeck ob das so richtig rum ist
-    if richtung == gelisstromZugRaus : setzeHbrueckenPins(0, 1) #TODO CHeck ob das so richtig rum ist
-    
+def fahreZugRein(speedInProzent, abbruchzeitInMs):
+    logger.log("Fahre zug in abschnitt REIN", "H_BRUECKE")
+    setzeHbrueckenPins(1, 0) #TODO CHeck ob das so richtig rum ist
+
     myDutyTime = prozent2dutycycle(speedInProzent)
     pin_hBrueckePwm.duty_u16(myDutyTime)
+ 
+    callback = False 
+    timer1 = Timer(period=abbruchzeitInMs, mode=Timer.ONE_SHOT, callback=stoppeZugViaClk())
     
-    timer1 = Timer(period=abbruchzeitInMs, mode=Timer.ONE_SHOT, callback=stoppeZug())
-    
-    #Reed kontakt fehlt
+    while reedSchalter_ZugErkannt != 1 :
+        if callback == True : return True       
+    stoppeZugViaReedschalter()
 
+########################################################################################################
+#    
+########################################################################################################
+def fahreZugRaus(speedInProzent, abbruchzeitInMs):
+    logger.log("Fahre zug in abschnitt RAUS", "H_BRUECKE")
+    setzeHbrueckenPins(0, 1) #TODO CHeck ob das so richtig rum ist 
 
-  
+    myDutyTime = prozent2dutycycle(speedInProzent)
+    pin_hBrueckePwm.duty_u16(myDutyTime)
+ 
+    callback = False 
+    timer1 = Timer(period=abbruchzeitInMs, mode=Timer.ONE_SHOT, callback=stoppeZugViaClk())
     
+    while lSchranke_ZugErkannt == 0 : # Warte bis zug im Lichtschrankenbereich ist
+        if callback == True : return True
+    while lSchranke_ZugErkannt == 1 : # Warte bis zug im Lichtschrankenbereich verlassen hat
+        if callback == True : return True
+        
+    stoppeZugViaLichtschranke()

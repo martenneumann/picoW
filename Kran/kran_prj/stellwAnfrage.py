@@ -30,6 +30,7 @@ def weichenOeffnenErlaubtAnfragenAntwortAbwarten():
         logger.log("WeichenOeffnenAnfragen::Weiche oeffnen erlaubt", "ACK")
         return True
     
+    
 ########################################################################################################
 # 
 ########################################################################################################

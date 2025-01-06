@@ -1,5 +1,9 @@
 from machine import Pin
 
+gpio_hBrueckePwm			= 20	# Pin um den Elektromagneten einzuschalten
+gpio_hBrueckeRechts			= 19	# Pin um den Elektromagneten einzuschalten
+gpio_hBrueckeLinks			= 18	# Pin um den Elektromagneten einzuschalten
+
 gpio_harkenAktivieren		= 16	# Pin um den Elektromagneten einzuschalten
 gpio_LichtschrankeLesen		= 15	# Pin um Lichtschranke zu lesen
 gpio_ReetSchalterLesen		= 14	# Pin um Reed Schlater zu lesen
@@ -17,22 +21,29 @@ gpio_stellwAck				= 0		# Pin liesst Stellwerk antwort. Fallende Flanke Ok. Ohne 
 
 
 # GLOBALEN
-stepsHarken 			= 1500				# Hierüber lässt sich einstellen wie viel Faden von der Winde abgewickelt werden soll. Je größer desto mehr.
-delayHarken 			= float(0.002)		# Geschwindigkeit mit der der Faden abgerollt werden soll. 0.001 max geschwindigkeit
-richtungHarkenHoch		= 1					# Winde wickelt Faden auf
-richtungHarkenRunter	= -1				# Winde wickelt Faden ab
-stepsTurn180Grad		= 260				# Hierüber lässt sich einstellen wie weit der Turm gedreht werden soll. 220 ca 180 Grad.
-delayTurn				= float(0.005)		# Geschwindigkeit mit der der Turm rotieren soll. 0.001 max geschwindigkeit
-richtungTurmDrehtRechts	= 1					# Turm dreht sich nach Rechts
-richtungTurmDrehtLinks	= -1				# Turm dreht sich nach Links
-gleisstromZugRein		= 1					# Wie rum sollen die Gleise unter Strom. 1 == Zug Rein, 0 == Zug Raus
-gelisstromZugRaus		= 0					# Wie rum sollen die Gleise unter Strom. 1 == Zug Rein, 0 == Zug Raus
-richtungWeicheAuf		= 1					# Weiche wird geoeffnet
-richtungWeicheZu		= 0					# Weiche wird geschlossen
-weichenMotorTraegerFrq	= 50				# Taeger Frequenz fuer Weichenmotor
-endlageWeicheAuf		= 1500000			# PWM duty time fuer Weiche auf
-endlageWeicheZu			= 1300000			# PWM duty time fuer Weiche zu
+stepsHarken 					= 1500				# Hierüber lässt sich einstellen wie viel Faden von der Winde abgewickelt werden soll. Je größer desto mehr.
+delayHarken 					= float(0.002)		# Geschwindigkeit mit der der Faden abgerollt werden soll. 0.001 max geschwindigkeit
+richtungHarkenHoch				= 1					# Winde wickelt Faden auf
+richtungHarkenRunter			= -1				# Winde wickelt Faden ab
+stepsTurn180Grad				= 260				# Hierüber lässt sich einstellen wie weit der Turm gedreht werden soll. 220 ca 180 Grad.
+delayTurn						= float(0.005)		# Geschwindigkeit mit der der Turm rotieren soll. 0.001 max geschwindigkeit
+richtungTurmDrehtRechts			= 1					# Turm dreht sich nach Rechts
+richtungTurmDrehtLinks			= -1				# Turm dreht sich nach Links
+gleisstromZugRein				= 1					# Wie rum sollen die Gleise unter Strom. 1 == Zug Rein, 0 == Zug Raus
+gelisstromZugRaus				= 0					# Wie rum sollen die Gleise unter Strom. 1 == Zug Rein, 0 == Zug Raus
+richtungWeicheAuf				= 1					# Weiche wird geoeffnet
+richtungWeicheZu				= 0					# Weiche wird geschlossen
+weichenMotorTraegerFrq			= 50				# Taeger Frequenz fuer Weichenmotor
+endlageWeicheAuf				= 1500000			# PWM duty time fuer Weiche auf
+endlageWeicheZu					= 1300000			# PWM duty time fuer Weiche zu
 
+minZugSpeed						= 45				# Min duty time fuer schwarzen zug zum bewegen. In Prozent. Wahrscheinlich zwischen 45% und 40% NOCH ZU TESTEN!!!
+abbruchzeitZugErsterHaltepunkt 	= 15000				# In Ms. Nach dieser Zeit schaltet die H-Brücke ab. Damit Zug nicht zuweit fährt. Kann auch genutzt werden,
+                                                    # wenn Reed kontakt nicht ordentlich greift. Dann kann versucht werden über diesen Parameter den Zug unter
+                                                    # den Kran zu stellen. Zeit in Millisekunden. WERT MUSS NOCH DURCH TESTEN RAUSGEFUNDEN WERDEN
+abbruchzeitZugZweiterHaltepunkt = 1000
+abbruchzeitZugVerlaesstBereich  = 30000
+                                           
 
 
 
