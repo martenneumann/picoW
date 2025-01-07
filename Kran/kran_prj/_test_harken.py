@@ -3,10 +3,15 @@ import utime
 
 if __name__ == "__main__":
     while True:
-        eingabe = input("Gebe 1 fuer Harken EINSCHALTEN 0 (Null) fuer Harken AUSSCHALTEN : ")
+        print("---------------------------------------------")
+        print("1 fuer Harken Einschalten")
+        print("2 fuer Harken Ausschalten")
+        eingabe = input("Eingabe : ")
+        print("---------------------------------------------")
+        
         if eingabe == "1":
             harkenSteuerung.harkenAn()
-        elif eingabe == "0":    
+        elif eingabe == "2":    
             harkenSteuerung.harkenAus()
         else :
             print("Fehleingabe")        

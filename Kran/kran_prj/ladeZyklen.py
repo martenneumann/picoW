@@ -1,7 +1,8 @@
 import logger
 import const
 import utime
-import kranMotoren
+import turmMotor
+import windenMotor
 import harkenSteuerung
 
 ########################################################################################################
@@ -9,19 +10,19 @@ import harkenSteuerung
 ########################################################################################################    
 def fahreEntladeZyclus():
     logger.log("START Entladezyklus", "INFO")
-    kranMotoren.fahreHarkenRunter()
+    windenMotor.fahreHarkenRunter()
     utime.sleep(2)
     harkenSteuerung.harkenAn()
     utime.sleep(2)
-    kranMotoren.fahreHarkenHoch()
+    windenMotor.fahreHarkenHoch()
     utime.sleep(2)
-    kranMotoren.rotiereTurmRecht()
+    turmMotor.fahreTurmInPosition3(const.speed_schrittweite_Turmmotor)
     utime.sleep(2)        
-    kranMotoren.fahreHarkenRunter()
+    windenMotor.fahreHarkenRunter()
     utime.sleep(2)
     harkenSteuerung.harkenAus()
     utime.sleep(2)
-    kranMotoren.fahreHarkenHoch()
+    windenMotor.fahreHarkenHoch()
     utime.sleep(2)
-    kranMotoren.rotiereTurmLinks()
+    turmMotor.fahreTurmInPosition1(const.speed_schrittweite_Turmmotor)
     logger.log("ENDE Entladezyklus", "INFO")      

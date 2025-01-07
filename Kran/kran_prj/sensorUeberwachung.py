@@ -63,4 +63,9 @@ def reedSchalterUeberwachen():
         reedSchalter_ZugErkannt = pin_ReedSchalter.value()
         logger.log(f"Zustandswechsel ReedSchalter reedSchalter_ZugErkannt='{reedSchalter_ZugErkannt}'", "REED")
 
-  
+########################################################################################################
+# Reed
+########################################################################################################
+def getReedSchalterZustand():
+    global reedSchalter_ZugErkannt
+    return reedSchalter_ZugErkannt

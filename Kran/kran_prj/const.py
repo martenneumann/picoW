@@ -28,7 +28,7 @@ richtungHarkenHoch				= 1					# Winde wickelt Faden auf
 richtungHarkenRunter			= -1				# Winde wickelt Faden ab
 #stepsTurn180Grad				= 260				# Hierüber lässt sich einstellen wie weit der Turm gedreht werden soll. 220 ca 180 Grad.
 #delayTurn						= float(0.005)		# Geschwindigkeit mit der der Turm rotieren soll. 0.001 max geschwindigkeit
-speedTurmmotor					= 0.02				# Geschwindigkeit mit der der Turm rotieren soll. Besser nicht ueber 0.02
+#speedTurmmotor					= 0.02				# Geschwindigkeit mit der der Turm rotieren soll. Besser nicht ueber 0.02
 richtungTurmDrehtRechts			= 1					# Turm dreht sich nach Rechts
 richtungTurmDrehtLinks			= -1				# Turm dreht sich nach Links
 gleisstromZugRein				= 1					# Wie rum sollen die Gleise unter Strom. 1 == Zug Rein, 0 == Zug Raus
@@ -38,7 +38,11 @@ richtungWeicheZu				= 0					# Weiche wird geschlossen
 weichenMotorTraegerFrq			= 50				# Taeger Frequenz fuer Weichenmotor
 endlageWeicheAuf				= 1500000			# PWM duty time fuer Weiche auf
 endlageWeicheZu					= 1300000			# PWM duty time fuer Weiche zu
-
+turmMotorGrad000				= 500000			# PWM duty fuer den Winkel des Turmmotors
+turmMotorGrad090				= 1500000			# PWM duty fuer den Winkel des Turmmotors
+turmMotorGrad180				= 2500000			# PWM duty fuer den Winkel des Turmmotors
+speed_schrittweite_Turmmotor	= 10000				# Drehgeschwindigkeit Turmmotor in steps ns
+verzoegerungTurmMotor			= 0.02				# Verlangsamt das drehen des Turmmotors
 minZugSpeed						= 45				# Min duty time fuer schwarzen zug zum bewegen. In Prozent. Wahrscheinlich zwischen 45% und 40% NOCH ZU TESTEN!!!
 abbruchzeitZugErsterHaltepunkt 	= 15000				# In Ms. Nach dieser Zeit schaltet die H-Brücke ab. Damit Zug nicht zuweit fährt. Kann auch genutzt werden,
                                                     # wenn Reed kontakt nicht ordentlich greift. Dann kann versucht werden über diesen Parameter den Zug unter

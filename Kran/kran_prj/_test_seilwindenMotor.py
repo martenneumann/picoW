@@ -1,12 +1,18 @@
 import windenMotor
-import utime
+
+
 
 if __name__ == "__main__":
     while True:
-        eingabe = input("Gebe 1 fuer Harken Runter; 0 (Null) fuer Harken Hoch : ")
+        print("---------------------------------------------")
+        print("1 Harken runter Fahren")
+        print("2 Harken hoch Fahren")
+        eingabe = input("Eingabe : ")
+        print("---------------------------------------------")
+        
         if eingabe == "1":
             windenMotor.fahreHarkenRunter()
-        elif eingabe == "0":    
+        elif eingabe == "2":    
             windenMotor.fahreHarkenHoch()
         else :
             print("Fehleingabe")        

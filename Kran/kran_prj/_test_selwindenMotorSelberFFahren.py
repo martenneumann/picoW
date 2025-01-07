@@ -1,17 +1,24 @@
-import kranMotoren
+import windenMotor
 import const
 import logger
 import utime
 
 if __name__ == "__main__":
     while True:
-        eingabe = input("Gebe 1 fuer Harken Runter; 0 (Null) fuer Harken Hoch : ")
-        steps   = int(input("Gebe eine strecke fue das Seil an (zb. 200) : "))
-        speed   = float(input("Gebe eine geschwindigkeit an (0.001 max speed) : "))
+        print("---------------------------------------------")
+        print("1 Harken runter Fahren")
+        print("2 Harken hoch Fahren")
+        eingabe = input("Eingabe 1 von 3: ")
+        print("Gebe eine strecke fue das Seil an (zb. 200) ")
+        steps  	= int(input("Eingabe 2 von 3 : "))
+        print("Gebe eine geschwindigkeit an (0.001 max speed)")
+        speed   = float(input("Eingabe 3 von 3 : "))
+        print("---------------------------------------------")        
+
         if eingabe == "1":
-            kranMotoren.fahreHarkenRunter(steps, speed)
-        elif eingabe == "0":    
-            kranMotoren.fahreHarkenHoch(steps, speed)
+            windenMotor.fahreHarkenRunter(steps, speed)
+        elif eingabe == "2":    
+            windenMotor.fahreHarkenHoch(steps, speed)
         else :
             print("Fehleingabe")        
 

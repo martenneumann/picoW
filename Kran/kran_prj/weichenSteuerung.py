@@ -46,8 +46,8 @@ def weicheSteuern(position):
     #TODO
     if sensorUeberwachung.lSchranke_ZugErkannt == 1 :
         logger.log("Weiche oeffnen erlaubt aber Zug im Weichenbereich. EXIT -1", "ERR")
-        sensorUberwachungStoppen()
-        exit -1
+        #sensorUberwachungStoppen()
+        #exit -1
         
     if position == const.richtungWeicheAuf: pin_weichenMotor.duty_ns(const.endlageWeicheAuf)	# Weiche auffahren
     if position == const.richtungWeicheZu : pin_weichenMotor.duty_ns(const.endlageWeicheZu)		# Weiche zufahren

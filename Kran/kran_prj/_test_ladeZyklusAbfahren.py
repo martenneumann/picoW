@@ -1,9 +1,14 @@
-import kranMotoren
-import const
 import logger
-import utime
 import ladeZyklen
 
 if __name__ == "__main__":
-    logger.log("TEST FAHRE LADEYKLUS AB", "TEST")
-    ladeZyklen.fahreEntladeZyclus()
+    while True:
+        print("---------------------------------------------")
+        print("1 Entladezykllus starten")
+        eingabe = input("Eingabe : ")
+        print("---------------------------------------------")
+        
+        if eingabe == "1" :
+            ladeZyklen.fahreEntladeZyclus()
+        else :
+            print("Fehleingabe")       
