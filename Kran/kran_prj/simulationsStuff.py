@@ -1,7 +1,13 @@
+import sys
+import select
+import logger
+
 ########################################################################################################
 # 
 ########################################################################################################
 def pruefeAufTestaturEingabe():
     if select.select([sys.stdin], [], [], 0)[0]:
-        return sys.stdin.readline().strip()
+        eingabe = sys.stdin.readline().strip()
+        logger.log(f"ACHTUNG : Es gab eine Tastatureingabe : '{eingabe}'", "SIMULATION")
+        return eingabe
     return None

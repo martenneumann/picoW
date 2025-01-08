@@ -4,7 +4,9 @@ import sensorUeberwachung
 import const
 import logger
 import simulationsStuff
+import utime
 import time
+
 
 ########################################################################################################
 #    Hier werden die GPIO Pins definiert
@@ -15,7 +17,7 @@ pin_hBrueckeLinks	= Pin(const.gpio_hBrueckeLinks, Pin.OUT)
 
 
 pin_hBrueckePwm.freq(8) #Setze Frequenz auf 8 Hz (8 Pegel pro Sekunde)
-#timer1 = Timer(0)
+
 
 ########################################################################################################
 #
@@ -71,7 +73,7 @@ def stoppeZug():
 ########################################################################################################
 #    
 ########################################################################################################
-def pruefeZugstoppViaClk(startZeit):
+def pruefeZugstoppViaClk(startZeit, abbruchsZeitInMs):
     aktuelleZeit = time.ticks_ms()
     zeitDifferenz = time.ticks_diff(aktuelleZeit, startZeit)
     
@@ -83,7 +85,7 @@ def pruefeZugstoppViaClk(startZeit):
 ########################################################################################################
 #    
 ########################################################################################################
-def pruefeZugstoppeViaUserinput():    
+def pruefeZugstoppViaUserinput():    
     tasteVonTastatur = simulationsStuff.pruefeAufTestaturEingabe()
     if tasteVonTastatur == "x" :
         stoppeZugViaUserinput()
@@ -93,7 +95,7 @@ def pruefeZugstoppeViaUserinput():
 ########################################################################################################
 #    
 ########################################################################################################
-def fahreZugRein(speedInProzent, abbruchsZeitInMs):
+def fahreZugRein(speedInProzent = const.minZugSpeed, abbruchsZeitInMs = const.abbruchzeitZugZweiterHaltepunkt):
     logger.log("Fahre Zug in Abschnitt REIN", "H_BRUECKE")
     setzeHbrueckenPins(1, 0)  # Rechts vorwärts, Links rückwärts
 
@@ -109,19 +111,19 @@ def fahreZugRein(speedInProzent, abbruchsZeitInMs):
             return 
         
         # Zug stoppen ueber Zeit
-        if pruefeZugstoppViaClk() : return
+        if pruefeZugstoppViaClk(startZeit, abbruchsZeitInMs) : return
                 
         # Zug stoppen ueber Nutzereingriff
-        if pruefeZugstoppeViaUserinput() : return
+        if pruefeZugstoppViaUserinput() : return
 
-        time.sleep(0.01)  # CPU-Last reduzieren
+        utime.sleep_ms(5)  # CPU-Last reduzieren
 
 
 
 ########################################################################################################
 #    
 ########################################################################################################
-def fahreZugRaus(speedInProzent, abbruchzeitInMs):
+def fahreZugRaus(speedInProzent = const.minZugSpeed, abbruchzeitInMs = const.abbruchzeitZugVerlaesstBereich):
     logger.log("Fahre zug in abschnitt RAUS", "H_BRUECKE")
     setzeHbrueckenPins(0, 1) #TODO CHeck ob das so richtig rum ist 
 
@@ -138,9 +140,9 @@ def fahreZugRaus(speedInProzent, abbruchzeitInMs):
             logger.log("Zug im Lichtschranken- / Wichenbereich erkannt, versuche ihn weiter raus zu fahren", "H_BRUECKE")
             break
         # Zug stoppen ueber Zeit
-        if pruefeZugstoppViaClk() : return
+        if pruefeZugstoppViaClk(startZeit, abbruchsZeitInMs) : return
         # Zug stoppen ueber Nutzereingriff
-        if pruefeZugstoppeViaUserinput() : return
+        if pruefeZugstoppViaUserinput() : return
                 
         utime.sleep_ms(50)
 
@@ -154,9 +156,9 @@ def fahreZugRaus(speedInProzent, abbruchzeitInMs):
             return
         
         # Zug stoppen ueber Zeit
-        if pruefeZugstoppViaClk() : return
+        if pruefeZugstoppViaClk(startZeit, abbruchsZeitInMs) : return
         # Zug stoppen ueber Nutzereingriff
-        if pruefeZugstoppeViaUserinput() : return
+        if pruefeZugstoppViaUserinput() : return
                 
         utime.sleep_ms(50)
 
