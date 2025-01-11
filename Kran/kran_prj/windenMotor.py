@@ -64,23 +64,7 @@ def fahreHarkenRunter_Wagon(steps = const.stepsHarken, speed = const.delayHarken
     step_motor(steps, speed, const.richtungHarkenRunter)
     cleanup()
     
-########################################################################################################
-# 
-########################################################################################################
-def fahreHarkenHoch_Ladeplatz(steps = const.stepsHarken, speed = const.delayHarken) :
-    logger.log("Harken hoch fahren : Vom Ladeplatz", "HARKEN_MOTOR")
-    steps += stepsHarkenOffset
-    step_motor(steps, speed, const.richtungHarkenHoch)
-    cleanup()
 
-########################################################################################################
-# 
-########################################################################################################
-def fahreHarkenRunter_Ladeplatz(steps = const.stepsHarken, speed = const.delayHarken) :
-    logger.log("Harken runter fahren : Auf den Ladeplatz", "HARKEN_MOTOR")
-    steps += stepsHarkenOffset
-    step_motor(steps, speed, const.richtungHarkenRunter)
-    cleanup()    
 
     
  

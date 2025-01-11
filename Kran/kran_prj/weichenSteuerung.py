@@ -43,7 +43,6 @@ def weicheInitalSchliessen():
 # Code aus mail "micropython Programme" vom 25.09.2024 - 08:20
 ########################################################################################################    
 def weicheSteuern(position):
-    #TODO
     if sensorUeberwachung.lSchranke_ZugErkannt == 1 :
         logger.log("Weiche oeffnen erlaubt aber Zug im Weichenbereich. EXIT -1", "ERR")
         #sensorUberwachungStoppen()

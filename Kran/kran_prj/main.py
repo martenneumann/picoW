@@ -25,13 +25,14 @@ if __name__ == "__main__":
         weichenSteuerung.weicheInitalSchliessen()
         
         # Starte Sensor ueberwachung
-        sensorUeberwachung.sensorUberwachungStarten()
+        #sensorUeberwachung.sensorUberwachungStarten()
         
         # Warte auf die erlaubniss die Weiche zu öffnen
         stellwAnfrage.weichenOeffnenErlaubtAnfragenAntwortAbwarten()
         weichenSteuerung.weicheOeffnen()
         
         warteAufZugImWeichenbereich()
+        utime.sleep(5)
         
         # Erster haltepunkt
         hbrueckenSteuerung.fahreZugRein(const.minZugSpeed, const.abbruchzeitZugErsterHaltepunkt)

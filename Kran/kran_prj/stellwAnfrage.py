@@ -1,6 +1,7 @@
 import utime
 import const
 import logger
+import simulationsStuff
 from machine import Pin
 
 ########################################################################################################
@@ -29,7 +30,9 @@ def sendeSimulierteStellwerksAntwort(flankeRichtung):
 def checkeAckVonSimmulation(flankenRichtung):
     testaturEingabe = simulationsStuff.pruefeAufTestaturEingabe()
     if testaturEingabe == "o":
-        sendeSimulierteStellwerksAntwort(flankenRichtung)    
+        sendeSimulierteStellwerksAntwort(flankenRichtung)
+   if testaturEingabe == "f":
+        sendeSimulierteStellwerksAntwort(flankenRichtung)         
 ########################################################################################################
 # 
 ########################################################################################################

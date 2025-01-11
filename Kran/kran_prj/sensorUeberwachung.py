@@ -8,7 +8,7 @@ from machine import Pin
 #    Hier werden die GPIO Pins definiert
 ########################################################################################################
 pin_Lichtschranke	= Pin(const.gpio_LichtschrankeLesen, Pin.IN)
-pin_ReedSchalter	= Pin(const.gpio_ReetSchalterLesen, Pin.IN)
+pin_ReedSchalter	= Pin(const.gpio_ReetSchalterLesen, Pin.IN, Pin.PULL_DOWN)
 
 ########################################################################################################
 #   Globale Variablen
@@ -49,9 +49,10 @@ def sensorUberwachungStoppen():
 ######################################################################################################## 
 def lichtschrankeUeberwachen():
     global lSchranke_ZugErkannt
-    if pin_Lichtschranke.value() == lSchranke_ZugErkannt:
-        lSchranke_ZugErkannt = 1 - pin_Lichtschranke.value()  # Ändert zwischen 0 und 1
+    if pin_Lichtschranke.value() != lSchranke_ZugErkannt :
         logger.log(f"Zustandswechsel Lichtschranke lSchranke_ZugErkannt='{lSchranke_ZugErkannt}'", "L-SCHRANKE")
+    if pin_Lichtschranke.value() ==  0 : lSchranke_ZugErkannt = 0
+    else :  lSchranke_ZugErkannt = 1
 
         
 ########################################################################################################
@@ -59,13 +60,8 @@ def lichtschrankeUeberwachen():
 ######################################################################################################## 
 def reedSchalterUeberwachen():
     global reedSchalter_ZugErkannt
-    if pin_ReedSchalter.value() != reedSchalter_ZugErkannt:
-        reedSchalter_ZugErkannt = pin_ReedSchalter.value()
-        logger.log(f"Zustandswechsel ReedSchalter reedSchalter_ZugErkannt='{reedSchalter_ZugErkannt}'", "REED")
-
-########################################################################################################
-# Reed
-########################################################################################################
-def getReedSchalterZustand():
-    global reedSchalter_ZugErkannt
-    return reedSchalter_ZugErkannt
+    reed_state = pin_ReedSchalter.value()
+    if reed_state != reedSchalter_ZugErkannt :
+        if reed_state == 0 : reedSchalter_ZugErkannt = 0
+        else : reedSchalter_ZugErkannt = 1
+        logger.log(f"Zustandswechsel Reed Schalter reedSchalter_ZugErkannt='{reedSchalter_ZugErkannt}'", "Reeed")

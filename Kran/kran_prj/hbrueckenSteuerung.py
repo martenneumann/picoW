@@ -1,9 +1,9 @@
 from machine import Pin, PWM
 from machine import Timer
 import sensorUeberwachung
+import simulationsStuff
 import const
 import logger
-import simulationsStuff
 import utime
 import time
 
@@ -74,6 +74,8 @@ def stoppeZug():
 #    
 ########################################################################################################
 def pruefeZugstoppViaClk(startZeit, abbruchsZeitInMs):
+    if abbruchsZeitInMs == 0 : return False	#Kein abbruch ueber Zeit erwuenscht
+    
     aktuelleZeit = time.ticks_ms()
     zeitDifferenz = time.ticks_diff(aktuelleZeit, startZeit)
     
@@ -111,7 +113,7 @@ def fahreZugRein(speedInProzent = const.minZugSpeed, abbruchsZeitInMs = const.ab
             return 
         
         # Zug stoppen ueber Zeit
-        if pruefeZugstoppViaClk(startZeit, abbruchsZeitInMs) : return
+        if pruefeZugstoppViaClk(startZeit, const.abbruchsZeitInMs) : return
                 
         # Zug stoppen ueber Nutzereingriff
         if pruefeZugstoppViaUserinput() : return
@@ -140,7 +142,7 @@ def fahreZugRaus(speedInProzent = const.minZugSpeed, abbruchzeitInMs = const.abb
             logger.log("Zug im Lichtschranken- / Wichenbereich erkannt, versuche ihn weiter raus zu fahren", "H_BRUECKE")
             break
         # Zug stoppen ueber Zeit
-        if pruefeZugstoppViaClk(startZeit, abbruchsZeitInMs) : return
+        if pruefeZugstoppViaClk(startZeit, const.abbruchsZeitInMs) : return
         # Zug stoppen ueber Nutzereingriff
         if pruefeZugstoppViaUserinput() : return
                 
@@ -156,7 +158,7 @@ def fahreZugRaus(speedInProzent = const.minZugSpeed, abbruchzeitInMs = const.abb
             return
         
         # Zug stoppen ueber Zeit
-        if pruefeZugstoppViaClk(startZeit, abbruchsZeitInMs) : return
+        if pruefeZugstoppViaClk(startZeit, const.abbruchsZeitInMs) : return
         # Zug stoppen ueber Nutzereingriff
         if pruefeZugstoppViaUserinput() : return
                 
