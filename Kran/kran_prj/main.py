@@ -6,7 +6,7 @@ import weichenSteuerung
 import sensorUeberwachung
 import utime
 import ladeZyklen
-import hbrueckenSteuerung
+import zugSteuerung
 
 
 ########################################################################################################
@@ -22,10 +22,10 @@ if __name__ == "__main__":
     while(True):
         # INIT
         logger.log("Kran Programm gestartet.", "INFO")
-        #weichenSteuerung.weicheInitalSchliessen()
+        weichenSteuerung.weicheInitalSchliessen()
         
         # Starte Sensor ueberwachung
-        #sensorUeberwachung.sensorUberwachungStarten()
+        sensorUeberwachung.sensorUberwachungStarten()
         
         # Warte auf die erlaubniss die Weiche zu öffnen
         stellwAnfrage.weichenOeffnenErlaubtAnfragenAntwortAbwarten()
@@ -35,25 +35,26 @@ if __name__ == "__main__":
         utime.sleep(5)
         
         # Erster haltepunkt
-        hbrueckenSteuerung.fahreZugRein(const.minZugSpeed, const.abbruchzeitZugErsterHaltepunkt)
-        logger.log("Zug hat ersten Entladepunkt erreicht.", "INFO")
-        utime.sleep(5)
-        stellwAnfrage.weichenSchliessenErlaubtAnfragenAntwortAbwarten() # Warte auf die erlaubniss die Weiche zu schliessen
-        weichenSteuerung.weicheSchliessen()        
-        ladeZyklen.fahreEntladeZyclus()
+        zugSteuerung.fahreZugRein(const.minZugSpeed, const.abbruchsZeitInMs_ZugReinfahren)
+        logger.log("Zug hat Haltepunkt erreicht.", "INFO")
         utime.sleep(5)
         
-        #Zweiter haltepunkt
-        hbrueckenSteuerung.fahreZugRein(const.minZugSpeed, const.abbruchzeitZugZweiterHaltepunkt)
-        logger.log("Zug hat zweiten Entladepunkt erreicht.", "INFO")
-        utime.sleep(5)
-        ladeZyklen.fahreEntladeZyclus()
+        # Weiche schliessen
+        stellwAnfrage.weichenSchliessenErlaubtAnfragenAntwortAbwarten() # Warte auf die erlaubniss die Weiche zu schliessen
+        weichenSteuerung.weicheSchliessen()
+        utime.sleep(5)        
+        
+        # Zug end- und beladen
+        ladeZyklen.fahreEntladeUndBeladeZyclus()
         utime.sleep(5)
         
         # Warte auf die erlaubniss die Weiche zu öffnen
         stellwAnfrage.weichenOeffnenErlaubtAnfragenAntwortAbwarten()
-        weichenSteuerung.weicheOeffnen()        
-        hbrueckenSteuerung.fahreZugRaus(const.minZugSpeed, const.abbruchzeitZugVerlaesstBereich)        
+        weichenSteuerung.weicheOeffnen()
+        utime.sleep(5)
+        
+        zugSteuerung.fahreZugRaus(const.minZugSpeed, const.abbruchsZeitInMs_ZugRausfahren)        
+        utime.sleep(5)
         
         # Warte auf die erlaubniss die Weiche zu schliessen        
         stellwAnfrage.weichenScchliessenErlaubtAnfragenAntwortAbwarten() 

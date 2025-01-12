@@ -28,7 +28,7 @@ gpio_stellwAck				= 0		# Pin liesst Stellwerk antwort. Fallende Flanke Ok. Ohne 
 sensorUeberwachungLoopSleepTimeMs = 1
 
 # Windenmotor
-stepsHarken 					= 2000				# Hierüber lässt sich einstellen wie viel Faden von der Winde abgewickelt werden soll. Je größer desto mehr.
+stepsHarken 					= 1500				# Hierüber lässt sich einstellen wie viel Faden von der Winde abgewickelt werden soll. Je größer desto mehr.
 stepsHarkenOffset				= 150               # Hier lässt sich die einstellen wie viel mehr Faden gegeben werden muss um den Boden zu erreichen. Differnez Boden zu Wagon
 delayHarken 					= float(0.002)		# Geschwindigkeit mit der der Faden abgerollt werden soll. 0.001 max geschwindigkeit
 richtungHarkenHoch				= 1					# Winde wickelt Faden auf

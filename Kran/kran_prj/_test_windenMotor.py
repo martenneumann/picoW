@@ -15,4 +15,3 @@ if __name__ == "__main__":
             windenMotor.fahreHarkenHoch()         
         else :
             print("Fehleingabe")        
-1
