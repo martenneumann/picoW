@@ -11,12 +11,13 @@ import time
 ########################################################################################################
 #    Hier werden die GPIO Pins definiert
 ########################################################################################################
-pin_hBrueckePwm		= PWM(Pin(const.gpio_hBrueckePwm))
-pin_hBrueckeRechts	= Pin(const.gpio_hBrueckeRechts, Pin.OUT)
-pin_hBrueckeLinks	= Pin(const.gpio_hBrueckeLinks, Pin.OUT)
+pin_hBruecke_ENB	= PWM(Pin(const.gpio_hBrueckeENB))
+pin_hBruecke_IN3	= Pin(const.gpio_hBrueckeIn3, Pin.OUT)
+pin_hBruecke_IN4	= Pin(const.gpio_hBrueckeIn4, Pin.OUT)
 
 
-pin_hBrueckePwm.freq(8) #Setze Frequenz auf 8 Hz (8 Pegel pro Sekunde)
+pin_hBruecke_ENB.freq(8) #Setze Frequenz auf 8 Hz (8 Pegel pro Sekunde)
+pin_hBruecke_ENB.duty_u16(0)
 
 
 ########################################################################################################
@@ -28,9 +29,9 @@ def prozent2dutycycle(percent):
 ########################################################################################################
 #    
 ########################################################################################################
-def setzeHbrueckenPins(rechts, links):
-    pin_hBrueckeRechts.value(rechts)
-    pin_hBrueckeLinks.value(links)
+def setzeHbrueckenPins(in3_OnOrOff, in4_OnOrOff):
+    pin_hBruecke_IN3.value(in3_OnOrOff)
+    pin_hBruecke_IN4.value(in4_OnOrOff)
 
 ########################################################################################################
 #    
@@ -59,7 +60,9 @@ def stoppeZugViaLichtschranke():
 #    
 ########################################################################################################
 def stoppeZugViaUserinput():
+    print("********************************************************")
     logger.log("Stoppe Zug via User input 'x' ", "H_BRUECKE")
+    print("********************************************************")
     stoppeZug()
     return True
 
@@ -67,8 +70,10 @@ def stoppeZugViaUserinput():
 #    
 ########################################################################################################
 def stoppeZug():
-    pin_hBrueckePwm.deinit()
+    pin_hBruecke_ENB.duty_u16(0)
+    pin_hBruecke_ENB.deinit()
     setzeHbrueckenPins(0, 0)
+
     
 ########################################################################################################
 #    
@@ -97,12 +102,12 @@ def pruefeZugstoppViaUserinput():
 ########################################################################################################
 #    
 ########################################################################################################
-def fahreZugRein(speedInProzent = const.minZugSpeed, abbruchsZeitInMs = const.abbruchzeitZugZweiterHaltepunkt):
+def fahreZugRein(speedInProzent = const.minZugSpeed, abbruchsZeitInMs = const.abbruchsZeitInMs_ZugReinfahren):
     logger.log("Fahre Zug in Abschnitt REIN", "H_BRUECKE")
     setzeHbrueckenPins(1, 0)  # Rechts vorwärts, Links rückwärts
 
     myDutyTime = prozent2dutycycle(speedInProzent)
-    pin_hBrueckePwm.duty_u16(myDutyTime)
+    pin_hBruecke_ENB.duty_u16(myDutyTime)
     
     startZeit = time.ticks_ms()  # Startzeit erfassen
 
@@ -110,21 +115,21 @@ def fahreZugRein(speedInProzent = const.minZugSpeed, abbruchsZeitInMs = const.ab
         if sensorUeberwachung.reedSchalter_ZugErkannt == 1:						# Zug stoppen ueber Reed Schlater
             stoppeZugViaReedschalter()
             return 
-        if pruefeZugstoppViaClk(startZeit, const.abbruchsZeitInMs) : return		# Zug stoppen ueber Zeit
+        if pruefeZugstoppViaClk(startZeit, abbruchsZeitInMs) : return		# Zug stoppen ueber Zeit
         if pruefeZugstoppViaUserinput() : return 								# Zug stoppen ueber Nutzereingriff
-        utime.sleep_ms(5)  # CPU-Last reduzieren
+        utime.sleep_ms(1)  # CPU-Last reduzieren
 
 
 
 ########################################################################################################
 #    
 ########################################################################################################
-def fahreZugRaus(speedInProzent = const.minZugSpeed, abbruchzeitInMs = const.abbruchzeitZugVerlaesstBereich):
+def fahreZugRaus(speedInProzent = const.minZugSpeed, abbruchzeitInMs = const.abbruchsZeitInMs_ZugRausfahren):
     logger.log("Fahre zug in abschnitt RAUS", "H_BRUECKE")
     setzeHbrueckenPins(0, 1) #TODO CHeck ob das so richtig rum ist 
 
     myDutyTime = prozent2dutycycle(speedInProzent)
-    pin_hBrueckePwm.duty_u16(myDutyTime)
+    pin_hBruecke_ENB.duty_u16(myDutyTime)
  
     startZeit = time.ticks_ms()  # Startzeit erfassen
     
@@ -132,9 +137,9 @@ def fahreZugRaus(speedInProzent = const.minZugSpeed, abbruchzeitInMs = const.abb
         if sensorUeberwachung.lSchranke_ZugErkannt == 1 :
             logger.log("Zug im Lichtschranken- / Wichenbereich erkannt, versuche ihn weiter raus zu fahren", "H_BRUECKE")
             break
-        if pruefeZugstoppViaClk(startZeit, const.abbruchsZeitInMs) : return
+        if pruefeZugstoppViaClk(startZeit, abbruchzeitInMs) : return
         if pruefeZugstoppViaUserinput() : return
-        utime.sleep_ms(50)
+        utime.sleep_ms(700)
 
     while True :
         if sensorUeberwachung.lSchranke_ZugErkannt == 0 :
@@ -142,7 +147,7 @@ def fahreZugRaus(speedInProzent = const.minZugSpeed, abbruchzeitInMs = const.abb
             stoppeZugViaLichtschranke()
             return
         
-        if pruefeZugstoppViaClk(startZeit, const.abbruchsZeitInMs) : return
+        if pruefeZugstoppViaClk(startZeit, abbruchzeitInMs) : return
         if pruefeZugstoppViaUserinput() : return
         utime.sleep_ms(50)
 

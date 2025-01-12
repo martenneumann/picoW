@@ -6,8 +6,8 @@ import utime
 if __name__ == "__main__":
     while True:
         print("---------------------------------------------")
-        print("1 Harken runter Fahren : In den Wagon")
-        print("2 Harken hoch Fahren   : Aus dem Wagon")
+        print("1 Harken runter Fahren")
+        print("2 Harken hoch Fahren")
         eingabe = input("Eingabe 1 von 3: ")
         print("Gebe eine strecke fue das Seil an (zb. 200) ")
         steps  	= int(input("Eingabe 2 von 3 : "))
@@ -16,8 +16,8 @@ if __name__ == "__main__":
         print("---------------------------------------------")        
 
         if eingabe == "1":
-            windenMotor.fahreHarkenRunter_Wagon(steps, speed)
+            windenMotor.fahreHarkenRunter(steps, speed)
         elif eingabe == "2":    
-            windenMotor.fahreHarkenHoch_Wagon(steps, speed)         
+            windenMotor.fahreHarkenHoch(steps, speed)         
         else :
             print("Fehleingabe")        

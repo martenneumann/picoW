@@ -1,3 +1,5 @@
+#Getestet
+
 # Bibliotheken laden
 from machine import Pin, PWM
 from time import sleep
@@ -15,7 +17,7 @@ pin_turmMotor.freq(50)  # Typische Frequenz für Servos ist 50 Hz
 ########################################################################################################
 # 
 ########################################################################################################
-aktuellerWinkelDesMotors = 500000
+aktuellerWinkelDesMotors = const.turmMotorGrad000
 
 ########################################################################################################
 # 

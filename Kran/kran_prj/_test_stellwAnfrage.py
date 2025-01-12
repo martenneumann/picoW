@@ -13,7 +13,6 @@ if __name__ == "__main__":
         print("---------------------------------------------")
         
 
-        
         if eingabe == "1":
             stellwAnfrage.weichenOeffnenErlaubtAnfragenAntwortAbwarten()
         elif eingabe == "2":

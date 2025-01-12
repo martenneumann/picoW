@@ -10,5 +10,7 @@ if __name__ == "__main__":
         
         if eingabe == "1" :
             ladeZyklen.fahreEntladeZyclus()
+        if eingabe == "2" :
+            ladeZyklen.fahreEntladeUndBeladeZyclus()            
         else :
             print("Fehleingabe")       

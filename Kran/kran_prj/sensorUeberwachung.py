@@ -24,7 +24,7 @@ reedSchalter_ZugErkannt	= 0 # objErkannt == 1 obNichtErkannt == 0
 ######################################################################################################## 
 def sensorUberwachungStarten():
     _thread.start_new_thread(sensorUberwachungsLoop, ())  
-    utime.sleep(10) #Gegen Kernkonflikt
+    utime.sleep_ms(10) #Gegen Kernkonflikt
         
 ########################################################################################################
 # Reed
@@ -54,7 +54,7 @@ def lichtschrankeUeberwachen():
     if pin_Lichtschranke.value() != lSchranke_ZugErkannt : return
     if pin_Lichtschranke.value() == 1 : lSchranke_ZugErkannt = 0
     if pin_Lichtschranke.value() == 0 : lSchranke_ZugErkannt = 1
-    logger.log(f"Zustandswechsel Lichtschranke lSchranke_ZugErkannt='{lSchranke_ZugErkannt}'", "Reeed")
+    logger.log(f"Zustandswechsel Lichtschranke lSchranke_ZugErkannt='{lSchranke_ZugErkannt}'", "L-SCHRANKE")
 
 
         
