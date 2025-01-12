@@ -107,17 +107,11 @@ def fahreZugRein(speedInProzent = const.minZugSpeed, abbruchsZeitInMs = const.ab
     startZeit = time.ticks_ms()  # Startzeit erfassen
 
     while True :
-        # Zug stoppen ueber Reed Schlater
-        if sensorUeberwachung.reedSchalter_ZugErkannt == 1:
+        if sensorUeberwachung.reedSchalter_ZugErkannt == 1:						# Zug stoppen ueber Reed Schlater
             stoppeZugViaReedschalter()
             return 
-        
-        # Zug stoppen ueber Zeit
-        if pruefeZugstoppViaClk(startZeit, const.abbruchsZeitInMs) : return
-                
-        # Zug stoppen ueber Nutzereingriff
-        if pruefeZugstoppViaUserinput() : return
-
+        if pruefeZugstoppViaClk(startZeit, const.abbruchsZeitInMs) : return		# Zug stoppen ueber Zeit
+        if pruefeZugstoppViaUserinput() : return 								# Zug stoppen ueber Nutzereingriff
         utime.sleep_ms(5)  # CPU-Last reduzieren
 
 
@@ -134,34 +128,22 @@ def fahreZugRaus(speedInProzent = const.minZugSpeed, abbruchzeitInMs = const.abb
  
     startZeit = time.ticks_ms()  # Startzeit erfassen
     
-    # Warte bis zug im Lichtschrankenbereich ist
-    # mit alternativen abbruchsmoeglichkeiten
     while True : 
-        # Erkenne Zug im Lichtschrankenbereich
         if sensorUeberwachung.lSchranke_ZugErkannt == 1 :
             logger.log("Zug im Lichtschranken- / Wichenbereich erkannt, versuche ihn weiter raus zu fahren", "H_BRUECKE")
             break
-        # Zug stoppen ueber Zeit
         if pruefeZugstoppViaClk(startZeit, const.abbruchsZeitInMs) : return
-        # Zug stoppen ueber Nutzereingriff
         if pruefeZugstoppViaUserinput() : return
-                
         utime.sleep_ms(50)
 
-    # Warte bis zug ausserhalb des Lichtschrankenbereich ist
-    # mit alternativen abbruchsmoeglichkeiten
     while True :
-        # Erkenne Zug im Lichtschrankenbereich
         if sensorUeberwachung.lSchranke_ZugErkannt == 0 :
             logger.log("Zug hat Lichtschranken- / Wichenbereich verlassen, Strom auf H-Bruecke aus", "H_BRUECKE")
             stoppeZugViaLichtschranke()
             return
         
-        # Zug stoppen ueber Zeit
         if pruefeZugstoppViaClk(startZeit, const.abbruchsZeitInMs) : return
-        # Zug stoppen ueber Nutzereingriff
         if pruefeZugstoppViaUserinput() : return
-                
         utime.sleep_ms(50)
 
     

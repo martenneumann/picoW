@@ -1,3 +1,4 @@
+# Getestet Funktioniert
 from machine import Pin
 import const
 import logger
@@ -51,16 +52,16 @@ def cleanup():
 ########################################################################################################
 # 
 ########################################################################################################
-def fahreHarkenHoch_Wagon(steps = const.stepsHarken, speed = const.delayHarken) :
-    logger.log("Harken hoch fahren : Aus den Wagon", "HARKEN_MOTOR")
+def fahreHarkenHoch(steps = const.stepsHarken, speed = const.delayHarken) :
+    logger.log("Harken hoch fahren", "HARKEN_MOTOR")
     step_motor(steps, speed, const.richtungHarkenHoch)
     cleanup()
 
 ########################################################################################################
 # 
 ########################################################################################################
-def fahreHarkenRunter_Wagon(steps = const.stepsHarken, speed = const.delayHarken) :
-    logger.log("Harken runter fahren : In den Wagon", "HARKEN_MOTOR")
+def fahreHarkenRunter(steps = const.stepsHarken, speed = const.delayHarken) :
+    logger.log("Harken runter fahren", "HARKEN_MOTOR")
     step_motor(steps, speed, const.richtungHarkenRunter)
     cleanup()
     

@@ -1,3 +1,4 @@
+# Getestet Funktioniert
 import harkenSteuerung_12V
 import utime
 

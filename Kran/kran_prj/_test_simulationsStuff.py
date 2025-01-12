@@ -1,4 +1,6 @@
+# FUNKTIONIERT
 import simulationsStuff
+import utime
 
 if __name__ == "__main__":
     while True:
@@ -10,6 +12,6 @@ if __name__ == "__main__":
         if eingabe == "1":
             while True :
                 vonTastatur = simulationsStuff.pruefeAufTestaturEingabe()
-                print ("Es wurde eingegeben : {vonTastatur}")
-                if vonTastatur = "x" : print ("Eingabe von x erkannt")
-                utime.sleep(5)
+                print(f"Es wurde eingegeben : {vonTastatur}")
+                if vonTastatur == "x" : print ("Eingabe von x erkannt")
+                utime.sleep(1)

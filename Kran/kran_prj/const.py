@@ -19,12 +19,13 @@ gpio_windenMotorIn4			= 10	# Pin für die Winde. 4 Schritt Motor. In4
 gpio_weichenMotor			= 5		# Pin für den Turm.  4 Schritt Motor. In4
 gpio_harkenAktivieren		= 3	# Pin um den Elektromagneten einzuschalten
 gpio_turmMotor				= 4		# Pin für den Turm. Servo Motor
-gpio_sumulationsStellwReq	= 2		# Pin um eigene Stellwerksantwort zu senden. Nur zur Simmulation
+gpio_simulationsStellwReq	= 2		# Pin um eigene Stellwerksantwort zu senden. Nur zur Simmulation
 gpio_stellwReq				= 1		# Pin schreibt anfrage Stellwerk ans stellwerk. Fallende Flanke wenn GPIIO 0 == 1. Ohne Stellwerk mit GPIO 1 verbinden
 gpio_stellwAck				= 0		# Pin liesst Stellwerk antwort. Fallende Flanke Ok. Ohne Stellwerk mit GPIO 1 verbinden
 
 
 # GLOBALEN
+sensorUeberwachungLoopSleepTimeMs = 1
 stepsHarken 					= 1500				# Hierüber lässt sich einstellen wie viel Faden von der Winde abgewickelt werden soll. Je größer desto mehr.
 stepsHarkenOffset				= 150               # Hier lässt sich die einstellen wie viel mehr Faden gegeben werden muss um den Boden zu erreichen. Differnez Boden zu Wagon
 delayHarken 					= float(0.002)		# Geschwindigkeit mit der der Faden abgerollt werden soll. 0.001 max geschwindigkeit
@@ -47,8 +48,8 @@ turmMotorGrad090				= 1500000			# PWM duty fuer den Winkel des Turmmotors
 turmMotorGrad180				= 2500000			# PWM duty fuer den Winkel des Turmmotors
 speed_schrittweite_Turmmotor	= 10000				# Drehgeschwindigkeit Turmmotor in steps ns
 verzoegerungTurmMotor			= 0.02				# Verlangsamt das drehen des Turmmotors
-stellwSimulationSteigendeFlanke = 1
-stellwSimulationFallendeFlanke	= 0
+stellwSimulationTasteSteigendeFlanke = "s"
+stellwSimulationTasteFallendeFlanke	 = "f"
 minZugSpeed						= 45				# Min duty time fuer schwarzen zug zum bewegen. In Prozent. Wahrscheinlich zwischen 45% und 40% NOCH ZU TESTEN!!!
 abbruchzeitZugErsterHaltepunkt 	= 50000				# In Ms. Nach dieser Zeit schaltet die H-Brücke ab. Damit Zug nicht zuweit fährt. Kann auch genutzt werden,
                                                     # wenn Reed kontakt nicht ordentlich greift. Dann kann versucht werden über diesen Parameter den Zug unter

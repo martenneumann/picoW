@@ -1,3 +1,4 @@
+#GETESTET - FUNKTIONIERT
 import sys
 import select
 import logger
@@ -8,6 +9,7 @@ import logger
 def pruefeAufTestaturEingabe():
     if select.select([sys.stdin], [], [], 0)[0]:
         eingabe = sys.stdin.readline().strip()
+        if eingabe == "" : return None
         logger.log(f"ACHTUNG : Es gab eine Tastatureingabe : '{eingabe}'", "SIMULATION")
         return eingabe
     return None

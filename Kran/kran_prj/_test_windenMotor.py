@@ -1,19 +1,18 @@
-import harkenSteuerung
-import utime
+# Getestet funktioniert
+import windenMotor
 
 if __name__ == "__main__":
     while True:
         print("---------------------------------------------")
-        print("1 fuer Harken Einschalten")
-        print("2 fuer Harken Ausschalten")
+        print("1 Harken runter Fahren")
+        print("2 Harken hoch Fahren")       
         eingabe = input("Eingabe : ")
         print("---------------------------------------------")
         
         if eingabe == "1":
-            harkenSteuerung.harkenAn()
+            windenMotor.fahreHarkenRunter() 
         elif eingabe == "2":    
-            harkenSteuerung.harkenAus()
+            windenMotor.fahreHarkenHoch()         
         else :
             print("Fehleingabe")        
-
-    
+1

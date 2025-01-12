@@ -1,3 +1,4 @@
+#Getestet
 import sensorUeberwachung
 import utime
 
@@ -25,6 +26,6 @@ if __name__ == "__main__":
             while True :
                 sensorUeberwachung.reedSchalterUeberwachen()
                 print("Reedschalter zug Erkannt (geschlossen)" if sensorUeberwachung.reedSchalter_ZugErkannt == 1 else "Reedschalter kein Zug erkannt (offen)")
-                utime.sleep_ms(20)
+                utime.sleep_ms(500)
         else :
             print("Fehleingabe") 

@@ -1,3 +1,4 @@
+#Getestet
 import utime
 
 # Initialisiere den Startzeitpunkt

@@ -22,7 +22,7 @@ if __name__ == "__main__":
     while(True):
         # INIT
         logger.log("Kran Programm gestartet.", "INFO")
-        weichenSteuerung.weicheInitalSchliessen()
+        #weichenSteuerung.weicheInitalSchliessen()
         
         # Starte Sensor ueberwachung
         #sensorUeberwachung.sensorUberwachungStarten()
