@@ -73,7 +73,7 @@ if __name__ == "__main__":
         utime.sleep(5)
         
         # Warte auf die erlaubniss die Weiche zu schliessen        
-        stellwAnfrage.weichenScchliessenErlaubtAnfragenAntwortAbwarten() 
+        stellwAnfrage.weichenSchliessenErlaubtAnfragenAntwortAbwarten() 
         weichenSteuerung.weicheSchliessen() 
 
     # Versuche den Sensor Thread zu stoppen, weil der Stop button in der
