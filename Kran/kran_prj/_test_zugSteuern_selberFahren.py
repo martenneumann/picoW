@@ -1,4 +1,4 @@
-import hbrueckenSteuerung
+import zugSteuerung
 import sensorUeberwachung
 import const
 import utime
@@ -19,11 +19,11 @@ if __name__ == "__main__":
                 
         if eingabe == "1":
             sensorUeberwachung.sensorUberwachungStarten()
-            hbrueckenSteuerung.fahreZugRein(speed, abbruchsZeit)
+            zzugSteuerung.fahreZugRein(speed, abbruchsZeit)
             sensorUeberwachung.sensorUberwachungStoppen()
         elif eingabe == "2":
             sensorUeberwachung.sensorUberwachungStarten()
-            hbrueckenSteuerung.fahreZugRein(speed, abbruchsZeit)
+            zugSteuerung.fahreZugRaus(speed, abbruchsZeit)
             sensorUeberwachung.sensorUberwachungStoppen()
         else :
             print("Fehleingabe")

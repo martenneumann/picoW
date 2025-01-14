@@ -1,10 +1,12 @@
-#GETESTET
+########################################################################################################
+# Dieses Modul steuert den Weichenmotor SG90
+#
+# @Status : Getestet Funktioniert
+#
+########################################################################################################
 
 ########################################################################################################
-#   SG90
-#	Braun	= GND
-#	Rot		= VCC
-#	Gelb	= SIG (Pin 20 GPI15)
+# Importiere von Module
 ########################################################################################################
 import logger
 import utime
@@ -21,28 +23,36 @@ pin_weichenMotor 		= PWM(Pin(const.gpio_weichenMotor))		# PWM-Modulatation
 pin_weichenMotor.freq(const.weichenMotorTraegerFrq)				# Traeeger  Frequenz
 
 ########################################################################################################
-# 
+# Oeffnet die Weiche
 ########################################################################################################    
 def weicheOeffnen():
     logger.log("Weiche oeffnen", "WEICHE")
     weicheSteuern(const.endlageWeicheAuf)
     
 ########################################################################################################
-# 
+# Schließt die Weiche
 ########################################################################################################    
 def weicheSchliessen():
     logger.log("Weiche schliessen", "WEICHE")
     weicheSteuern(const.endlageWeicheZu)
     
 ########################################################################################################
-# 
+# Oeffnet die Weiche Initial
+# Soll bei Programmstart aufgerufen werden
 ########################################################################################################    
 def weicheInitalSchliessen():
     logger.log("Stelle sicher das Weiche geschlossen ist", "WEICHE")
     weicheSteuern(const.endlageWeicheZu)    
     
 ########################################################################################################
-# Code aus mail "micropython Programme" vom 25.09.2024 - 08:20
+# Weichen Motor bewegen auf einen bestimmt Winkel
+#
+# 1. Ueberpruefe dass kein gegenstand die Lichtschranke unterbricht.
+#    (Zug im Weichenbereich)
+# 2. Weiche faehrt Winkel an
+#
+# @input = Weichenwinkel als PWM duty
+#
 ########################################################################################################    
 def weicheSteuern(position):
     if sensorUeberwachung.lSchranke_ZugErkannt == 1 :

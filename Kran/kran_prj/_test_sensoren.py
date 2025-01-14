@@ -7,7 +7,7 @@ if __name__ == "__main__":
     print("Achtung: Testprogramm könnte Thread nicht beenden. Pico abziehen und wieder anschließen nach beendigung")
     while True :
         print("---------------------------------------------")
-        print("1 Nur zusstandsänderungen von Lichtschranke + Reeed Schalter (Normaler modi)")
+        print("1 Nur zustandsänderungen von Lichtschranke + Reeed Schalter (Normaler modi)")
         print("2 Lichtschranke durchgängig Tracen")
         print("3 Reed Schalter durchgängig Tracen")
         eingabe = input("Eingabe : ")
