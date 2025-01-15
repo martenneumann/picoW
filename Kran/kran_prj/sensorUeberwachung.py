@@ -37,7 +37,7 @@ reedSchalter_ZugErkannt	= 0 # objErkannt == 1 obNichtErkannt == 0
 # Sobald gestartet wird automatisch die "sensorUeberwachungsLoop gestartet
 ######################################################################################################## 
 def sensorUberwachungStarten():
-    _thread.start_new_thread(sensorUberwachungsLoop, ())  
+    #_thread.start_new_thread(sensorUberwachungsLoop, ())  
     utime.sleep_ms(10) #Gegen Kernkonflikt
         
 ########################################################################################################
@@ -60,7 +60,7 @@ def sensorUberwachungStoppen():
     global stop_flagThread1
     logger.log("Sensor ueberwachungs Thread gestoppt", "INFO")
     stop_flagThread1 = True
-    utime.sleep(1)        
+    utime.sleep(10)        
         
 ########################################################################################################
 # Ueberwacht den Zustand der Lichtschranke und schreibt den
