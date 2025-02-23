@@ -1,7 +1,10 @@
 # Bibliotheken laden
-from machine 	import Pin
-from time 		import sleep_us, ticks_us
+from machine 	import Pin	
 from dht 		import DHT11
+from utime import sleep_us, ticks_us
+import time
+
+
 
 ##############################################################################################################################################                      
 #
@@ -9,7 +12,6 @@ from dht 		import DHT11
 trigger 		= Pin(16, Pin.OUT)											# Initialisierung GPIO-Ausgang für Trigger-Signal
 echo 			= Pin(17, Pin.IN)
 dht11_sensor 	= DHT11(Pin(14, Pin.IN, Pin.PULL_UP))	
-
 
 ##############################################################################################################################################                      
 #
