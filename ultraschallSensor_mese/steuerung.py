@@ -25,8 +25,8 @@ i = 0
 ##############################################################################################################################################
 # 
 ##############################################################################################################################################
-def getArithmetischesMittelFromMessungsArray() :
-    return sum(messungs_Array) / len(messungs_Array)
+def getArithmetischesMittelFromMessungsArray(myMessungs_Array) :
+    return sum(myMessungs_Array) / len(myMessungs_Array)
 
 ##############################################################################################################################################
 # https://www.leifiphysik.de/akustik/schallgeschwindigkeit/grundwissen/einflussfaktoren-auf-die-schallgeschwindigkeit
@@ -82,12 +82,14 @@ def getStandartAbweichung(varianzen_Array) :
 ##############################################################################################################################################
 def main():
     global i
+    global messungs_Array
+    
     while True :
 
         if i % 10 == 0 : aktuelleTemperatur	= sensoren.getTemperatur()    
 
-        setEntfernungsArray(aktuelleTemperatur)
-        aritMittel 		= getArithmetischesMittelFromMessungsArray()
+        messungs_Array	= setEntfernungsArray(aktuelleTemperatur)
+        aritMittel 		= getArithmetischesMittelFromMessungsArray(messungs_Array)
         varianzen_Array	= getVarianzFromMessungsArray(aritMittel)
         stdAbweichung 	= getStandartAbweichung(varianzen_Array)
         erwartungUndAbweichung_Array.append([aritMittel, stdAbweichung])
@@ -95,10 +97,12 @@ def main():
         if (i == 0) : speed = 0
         else : speed = getSpeed(erwartungUndAbweichung_Array[-1][0], erwartungUndAbweichung_Array[-2][0], sleepTime)
     
-        logger.dump(dumpForm, i, messungs_Array[-1], erwartungUndAbweichung_Array, speed)
+        logger.dump(dumpForm, i, messungs_Array, erwartungUndAbweichung_Array, speed)
     
         sleep(1)
         i += 1
+        
+        messungs_Array = []
 
 
 ##############################################################################################################################################

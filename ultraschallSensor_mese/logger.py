@@ -18,10 +18,11 @@ def dumpHmi(messungs_Array, erwartungUndAbweichung_Array, speed, durchlauf) :
     print("**********************************************************************************")
     print(f"Durchlauf = [{durchlauf}] || Zeitstempel = [{zeitStempel}]")
     
-    i = 1
-    for wert in messungs_Array:
-        print(f"Wert {i} = [{wert}] cm")
-        i += 1
+    if messungs_Array:
+        for i, wert in enumerate(messungs_Array, start=1):
+            print(f"Wert {i} = [{wert}] cm")
+    else:
+        print("Keine Messwerte vorhanden.")
         
     print(f"Erwartungswert = [{erwartungUndAbweichung_Array[-1][0]}] cm")
     print(f"Abweichung = [{erwartungUndAbweichung_Array[-1][1]}] cm")

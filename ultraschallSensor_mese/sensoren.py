@@ -51,7 +51,7 @@ def getTonlaufzeit():
 ##############################################################################################################################################
 def getTemperatur():
     dht11_sensor.measure()
-    return dht11_sensor.temperature()
+    return float(dht11_sensor.temperature())
     
     
     
