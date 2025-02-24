@@ -13,11 +13,6 @@ trigger 		= Pin(16, Pin.OUT)											# Initialisierung GPIO-Ausgang für Trigg
 echo 			= Pin(17, Pin.IN)
 dht11_sensor 	= DHT11(Pin(14, Pin.IN, Pin.PULL_UP))	
 
-##############################################################################################################################################                      
-#
-##############################################################################################################################################                      
-unglueltigeMessungZeit = 200000 
-
 ##############################################################################################################################################
 # https://www.mikrocontroller.net/attachment/218122/HC-SR04_ultraschallmodul_beschreibung_3.pdf
 # 1. Das Auslösen eines Messzyklus geschieht durch eine fallende Flanke am Triggereingang (Pin 2 == trigger) für mindestens 10µs.

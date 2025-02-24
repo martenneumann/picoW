@@ -1,5 +1,6 @@
 # Bibliotheken laden
 from time import sleep_ms, sleep
+from utime import sleep_us, ticks_us
 import init
 import sensoren
 import logger
@@ -9,14 +10,18 @@ import utime
 ##############################################################################################################################################
 # 
 ##############################################################################################################################################
-sleepTime = 100
-anzahlMessungenProSample = 10
-dumpForm = 1
-messungsKorrekturFaktor = 1
-messungs_Array = []
-erwartungUndAbweichung_Array = []
-START_TIME = utime.ticks_ms()
-i = 0
+sleepTime 						= 2000  # Millisekunden
+sleepTimeZwischenMessungen		= 5    # Millisekunden
+anzahlMessungenProSample		= 10
+dumpCSV 						= 0
+dumpHMI							= 1
+dumpNurSpeed					= 2
+#messungsKorrekturFaktor			= 0
+#messungs_Array					= []
+#messungs_korrigiert_Array		= []
+#erwartungUndAbweichung_Array	= []
+#START_TIME						= utime.ticks_ms()
+i								= 0
 
 ##############################################################################################################################################
 ##############################################################################################################################################
@@ -36,26 +41,35 @@ def getSchallgeschwindigkeit(aktuelleTemperatur) :
 
 ##############################################################################################################################################
 # Tonlaufzeit auf die einheit Sekunden umrechnen
-# return in Meter
+# return in cm
 ##############################################################################################################################################
 def tonlaufzeit2Strecke(tonLaufzeit, aktuelleTemperatur) :
     return (( tonLaufzeit / 1_000_000.0 ) * getSchallgeschwindigkeit(aktuelleTemperatur)) / 2
 
+##########################################################################################################################################
+# 
+##########################################################################################################################################
+def calkAndSetNewSleepTime() :
+    global sleepTime
+    global sleepTimeZwischenMessungen
+    global anzahlMessungenProSample
+    sleepTime = sleepTime - (sleepTimeZwischenMessungen * anzahlMessungenProSample)
+    
 ##############################################################################################################################################
 # 
 ##############################################################################################################################################
 def setEntfernungsArray(aktuelleTemperatur) :
+    messungs_Array = []
+    messungs_korrigiert_Array = []
+    messungsKorrekturFaktor = init.getMessungsKalibrierFaktor()
     for y in range(anzahlMessungenProSample) :
         tonLaufzeit = sensoren.getTonlaufzeit()
-        streckeInMeter = tonlaufzeit2Strecke(tonLaufzeit, aktuelleTemperatur)
-        streckeInMeterKorregiert = streckeInMeter * messungsKorrekturFaktor
-        messungs_Array.append(streckeInMeter)
-
-##############################################################################################################################################
-# 
-##############################################################################################################################################
-def setMessungsKorrekturFaktor(myMessungsKorrekturFaktor) :
-    messungsKorrekturFaktor = myMessungsKorrekturFaktor
+        streckeInCm = tonlaufzeit2Strecke(tonLaufzeit, aktuelleTemperatur)
+        streckeInCmKorregiert = streckeInCm + messungsKorrekturFaktor
+        messungs_Array.append(streckeInCm)
+        messungs_korrigiert_Array.append(streckeInCmKorregiert)
+        sleep_us(sleepTimeZwischenMessungen)
+    return messungs_Array, messungs_korrigiert_Array
     
 ##############################################################################################################################################
 # 
@@ -83,32 +97,33 @@ def getStandartAbweichung(varianzen_Array) :
 def main():
     global i
     global messungs_Array
-    
+    global sleepTime
+    aritMittel_lastLoop = 0
     while True :
 
-        if i % 10 == 0 : aktuelleTemperatur	= sensoren.getTemperatur()    
-
-        messungs_Array	= setEntfernungsArray(aktuelleTemperatur)
-        aritMittel 		= getArithmetischesMittelFromMessungsArray(messungs_Array)
+        if i % 100 == 0 : aktuelleTemperatur	= sensoren.getTemperatur()
+        
+        messungs_Array , messungs_korregiert_Array	= setEntfernungsArray(aktuelleTemperatur)
+        aritMittel 		= getArithmetischesMittelFromMessungsArray(messungs_korregiert_Array)
         varianzen_Array	= getVarianzFromMessungsArray(aritMittel)
         stdAbweichung 	= getStandartAbweichung(varianzen_Array)
-        erwartungUndAbweichung_Array.append([aritMittel, stdAbweichung])
     
         if (i == 0) : speed = 0
-        else : speed = getSpeed(erwartungUndAbweichung_Array[-1][0], erwartungUndAbweichung_Array[-2][0], sleepTime)
+        else : speed = getSpeed(aritMittel, aritMittel_lastLoop, sleepTime)
+        print(f"aritMittel_lastLoop -> {aritMittel_lastLoop} | aritMittel -> {aritMittel} | speed -> {speed} ")
+        aritMittel_lastLoop = aritMittel
     
-        logger.dump(dumpForm, i, messungs_Array, erwartungUndAbweichung_Array, speed)
-    
-        sleep(1)
+        #logger.dump(dumpNurSpeed, i, messungs_Array, messungs_korregiert_Array, aritMittel, stdAbweichung, speed, init.getMessungsKalibrierFaktor(), aktuelleTemperatur)
+        sleep_ms(sleepTime)
         i += 1
         
-        messungs_Array = []
-
 
 ##############################################################################################################################################
 ##############################################################################################################################################
 if __name__ == "__main__":
-    print("hallo")
     init.initial()
-    main()    
+    calkAndSetNewSleepTime()
+    sleep(1)
+    main()
+
     
