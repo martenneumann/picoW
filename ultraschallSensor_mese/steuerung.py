@@ -1,37 +1,22 @@
 # Bibliotheken laden
 from time import sleep_ms, sleep
 from utime import sleep_us, ticks_us
+import _thread
 import init
 import sensoren
 import logger
-import utime
-
 
 ##############################################################################################################################################
-# 
-##############################################################################################################################################
-sleepTime 						= 2000  # Millisekunden
-sleepTimeZwischenMessungen		= 5    # Millisekunden
-anzahlMessungenProSample		= 10
-dumpCSV 						= 0
-dumpHMI							= 1
-dumpNurSpeed					= 2
-#messungsKorrekturFaktor			= 0
-#messungs_Array					= []
-#messungs_korrigiert_Array		= []
-#erwartungUndAbweichung_Array	= []
-#START_TIME						= utime.ticks_ms()
-i								= 0
-
-##############################################################################################################################################
-##############################################################################################################################################
-
+messungNachXms						= 10   # Millisekunden
+temperaturNachXmessungenErneuern	= 10
+anzahlMessungenProSample			= 10
+i									= 0
 
 ##############################################################################################################################################
 # 
 ##############################################################################################################################################
-def getArithmetischesMittelFromMessungsArray(myMessungs_Array) :
-    return sum(myMessungs_Array) / len(myMessungs_Array)
+def getArithmetischesMittelFromArray(myArray) :
+    return sum(myArray) / len(myArray)
 
 ##############################################################################################################################################
 # https://www.leifiphysik.de/akustik/schallgeschwindigkeit/grundwissen/einflussfaktoren-auf-die-schallgeschwindigkeit
@@ -49,16 +34,16 @@ def tonlaufzeit2Strecke(tonLaufzeit, aktuelleTemperatur) :
 ##########################################################################################################################################
 # 
 ##########################################################################################################################################
-def calkAndSetNewSleepTime() :
-    global sleepTime
-    global sleepTimeZwischenMessungen
-    global anzahlMessungenProSample
-    sleepTime = sleepTime - (sleepTimeZwischenMessungen * anzahlMessungenProSample)
+#def calkAndSetNewSleepTime() :
+#    global sleepTime
+#    global sleepTimeZwischenMessungen
+#    global anzahlMessungenProSample
+#    sleepTime = sleepTime - (sleepTimeZwischenMessungen * anzahlMessungenProSample)
     
 ##############################################################################################################################################
 # 
 ##############################################################################################################################################
-def setEntfernungsArray(aktuelleTemperatur) :
+def getEntfernungsArray(aktuelleTemperatur) :
     messungs_Array = []
     messungs_korrigiert_Array = []
     messungsKorrekturFaktor = init.getMessungsKalibrierFaktor()
@@ -66,10 +51,9 @@ def setEntfernungsArray(aktuelleTemperatur) :
         tonLaufzeit = sensoren.getTonlaufzeit()
         streckeInCm = tonlaufzeit2Strecke(tonLaufzeit, aktuelleTemperatur)
         streckeInCmKorregiert = streckeInCm + messungsKorrekturFaktor
-        messungs_Array.append(streckeInCm)
-        messungs_korrigiert_Array.append(streckeInCmKorregiert)
-        sleep_us(sleepTimeZwischenMessungen)
-    return messungs_Array, messungs_korrigiert_Array
+        messungs_Array.append(streckeInCmKorregiert)
+        sleep_ms(messungNachXms)
+    return messungs_Array
     
 ##############################################################################################################################################
 # 
@@ -80,41 +64,62 @@ def getSpeed(d1, d2, t) :
 ##############################################################################################################################################
 # 
 ##############################################################################################################################################
-def getVarianzFromMessungsArray(aritMittel) :
+def getVarianzFromArray(myArray, aritMittel) :
     varianz_array = []
-    for x in messungs_Array : varianz_array.append((x - aritMittel) ** 2)
+    for x in myArray :
+        varianz_array.append((x - aritMittel) ** 2)
     return varianz_array
 
 ##############################################################################################################################################
 # 
 ##############################################################################################################################################
-def getStandartAbweichung(varianzen_Array) :
+def getStandartAbweichungFromArray(varianzen_Array) :
     return ((1 / (len(varianzen_Array) - 1)) * sum(varianzen_Array)) ** 0.5
 
-    
+##############################################################################################################################################
+# 
+##############################################################################################################################################
+def getSpeedArray(messungs_Array, t):
+    speed_Array = []
+    speed_Array.append(0)
+    for i in range(len(messungs_Array) - 1):
+        speed = getSpeed(messungs_Array[i], messungs_Array[i + 1], t)
+        speed_Array.append(speed)
+    return speed_Array
+
+##############################################################################################################################################
+# 
+##############################################################################################################################################
+def getStandartAbweichungDesMittelwerts(stdAbweichung) :
+    return stdAbweichung / (anzahlMessungenProSample ** 0.5)
+
 ##############################################################################################################################################
 ##############################################################################################################################################
 def main():
-    global i
-    global messungs_Array
-    global sleepTime
-    aritMittel_lastLoop = 0
+    global i, messungs_Array, sleepTime
     while True :
 
-        if i % 100 == 0 : aktuelleTemperatur	= sensoren.getTemperatur()
+        if i % temperaturNachXmessungenErneuern == 0 : aktuelleTemperatur = sensoren.getTemperatur()
         
-        messungs_Array , messungs_korregiert_Array	= setEntfernungsArray(aktuelleTemperatur)
-        aritMittel 		= getArithmetischesMittelFromMessungsArray(messungs_korregiert_Array)
-        varianzen_Array	= getVarianzFromMessungsArray(aritMittel)
-        stdAbweichung 	= getStandartAbweichung(varianzen_Array)
-    
-        if (i == 0) : speed = 0
-        else : speed = getSpeed(aritMittel, aritMittel_lastLoop, sleepTime)
-        print(f"aritMittel_lastLoop -> {aritMittel_lastLoop} | aritMittel -> {aritMittel} | speed -> {speed} ")
-        aritMittel_lastLoop = aritMittel
-    
-        #logger.dump(dumpNurSpeed, i, messungs_Array, messungs_korregiert_Array, aritMittel, stdAbweichung, speed, init.getMessungsKalibrierFaktor(), aktuelleTemperatur)
-        sleep_ms(sleepTime)
+        # Entfernungen
+        entfernungen_Array							= getEntfernungsArray(aktuelleTemperatur)
+        entfenungen_aritMittel						= getArithmetischesMittelFromArray(entfernungen_Array)
+        entfernungen_varianzenArray					= getVarianzFromArray(entfernungen_Array, entfenungen_aritMittel)
+        entfernungen_stdAbweichung					= getStandartAbweichungFromArray(entfernungen_varianzenArray)
+        entfernungen_stdAbweichungDesMittelwerts	= getStandartAbweichungDesMittelwerts(entfernungen_stdAbweichung)
+        
+        # Geschwindigkeiten
+        speed_Array									= getSpeedArray(entfernungen_Array, messungNachXms)
+        speed_aritMittel							= getArithmetischesMittelFromArray(speed_Array)
+        speed_varianzenArray						= getVarianzFromArray(speed_Array, speed_aritMittel)
+        speed_stdAbweichung							= getStandartAbweichungFromArray(speed_varianzenArray)
+        speed_stdAbweichungDesMittelwerts			= getStandartAbweichungDesMittelwerts(speed_stdAbweichung)
+
+
+        logger.dump(logger.dumpHMI, i,
+                    entfernungen_Array, entfenungen_aritMittel, entfernungen_stdAbweichung, entfernungen_stdAbweichungDesMittelwerts,
+                    speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts,
+                    init.getMessungsKalibrierFaktor(), aktuelleTemperatur)
         i += 1
         
 
@@ -122,8 +127,7 @@ def main():
 ##############################################################################################################################################
 if __name__ == "__main__":
     init.initial()
-    calkAndSetNewSleepTime()
-    sleep(1)
     main()
+    
 
     

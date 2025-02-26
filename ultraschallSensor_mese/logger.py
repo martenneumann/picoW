@@ -2,74 +2,116 @@ import utime
 import steuerung
 
 # Initialisiere den Startzeitpunkt, nehme einen Zeitstempel
-START_TIME = utime.ticks_ms()
+START_TIME = 0
+LETZTER_ZEITSTEMPEL = 0  # Letzter gespeicherter Zeitstempel
+dumpCSV 							= 0
+dumpHMI								= 1
+dumpNurSpeed						= 2
 
+##############################################################################################################################################
+# 
+##############################################################################################################################################
+def setLoggerStartTime():
+    global START_TIME, LETZTER_ZEITSTEMPEL
+    START_TIME = utime.ticks_ms()
+    LETZTER_ZEITSTEMPEL = START_TIME  # Setzt den ersten Vergleichswert
+
+##############################################################################################################################################
+# 
+##############################################################################################################################################
+def zeitStempelAusTicksDiff(t2, t1) :
+    gesamtZeit = utime.ticks_diff(t2, t1)
+    minutes = gesamtZeit // 60000
+    seconds = (gesamtZeit // 1000) % 60
+    milliseconds = gesamtZeit % 1000
+    return f"{minutes:02}:{seconds:02}.{milliseconds:03}"
+    
 ##############################################################################################################################################
 # 
 ##############################################################################################################################################
 def hohleZeitstempel():
-    sysZeit = utime.ticks_diff(utime.ticks_ms(), START_TIME)
-    minutes = sysZeit // 60000
-    seconds = (sysZeit // 1000) % 60
-    milliseconds = sysZeit % 1000
-    return f"{minutes:02}:{seconds:02}.{milliseconds:03}"
+    global LETZTER_ZEITSTEMPEL
+    aktuellerZeitInUtime = utime.ticks_ms()
+    
+    aktuellerZeitstempel = zeitStempelAusTicksDiff(aktuellerZeitInUtime, START_TIME)
+    differenzZeitstempel = zeitStempelAusTicksDiff(aktuellerZeitInUtime, LETZTER_ZEITSTEMPEL)
+    
+    LETZTER_ZEITSTEMPEL = aktuellerZeitInUtime
+    return aktuellerZeitstempel, differenzZeitstempel
 
 ##############################################################################################################################################
 # 
 ##############################################################################################################################################
-def dump(dumpForm, durchlauf, messungs_Array, messungs_korregiert_Array, aritMittel, stdAbweichung, speed, messungsKorrekturFaktor, aktuelleTemperatur) :
-    if dumpForm == 0 :
-        dumpCsv(durchlauf, messungs_Array, messungs_korregiert_Array, aritMittel, stdAbweichung, speed, messungsKorrekturFaktor, aktuelleTemperatur)
-    elif dumpForm == 1 :
-        dumpHmi(durchlauf, messungs_Array, messungs_korregiert_Array, aritMittel, stdAbweichung, speed, messungsKorrekturFaktor, aktuelleTemperatur)
-    elif dumpForm == 2 :
-        dumpJustSpeed(speed)
+def dump(dumpForm, durchlauf, entfernungen_Array, entfenungen_aritMittel, entfernungen_stdAbweichung, entfernungen_stdAbweichungDesMittelwerts,
+         speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, messungsKalibrierFaktor, aktuelleTemperatur) :
+    
+    if dumpForm == dumpCSV :
+        dumpCsv(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entfernungen_stdAbweichung, entfernungen_stdAbweichungDesMittelwerts,
+                speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, messungsKalibrierFaktor, aktuelleTemperatur)
+    
+    elif dumpForm == dumpHMI :
+        dumpHmi(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entfernungen_stdAbweichung, entfernungen_stdAbweichungDesMittelwerts,
+                speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, messungsKalibrierFaktor, aktuelleTemperatur)
+    
+    elif dumpForm == dumpNurSpeed :
+        dumpJustSpeed(speed_Array)
 ##############################################################################################################################################
 # 
 ##############################################################################################################################################
-def dumpJustSpeed(speed) :
-    print(f"Geschwindigkeit = [{speed}] cm/s")
+def dumpJustSpeed(speed_Array) :
+    for element in speed_Array : print(element)
     
 ##############################################################################################################################################
 # 
 ##############################################################################################################################################
-def dumpHmi(durchlauf, messungs_Array, messungs_korregiert_Array, aritMittel, stdAbweichung, speed, messungsKorrekturFaktor, aktuelleTemperatur) :
-    zeitStempel = hohleZeitstempel()
+def dumpHmi(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entfernungen_stdAbweichung, entfernungen_stdAbweichungDesMittelwerts,
+            speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, messungsKalibrierFaktor, aktuelleTemperatur) :
+    
+    
+    aktuellerZeitStempel, differenzZeitStempel = hohleZeitstempel()
     print("**********************************************************************************")
-    print(f"Durchlauf = [{durchlauf}] || Zeitstempel = [{zeitStempel}]")
+    print(f"Durchlauf = [{durchlauf}] || Zeitstempel = [{aktuellerZeitStempel}] || DiverenzZeit = [{differenzZeitStempel}]")
     
-    for i, (wert, korregiert) in enumerate(zip(messungs_Array, messungs_korregiert_Array), start=1):
-        print(f"Rohwert {i} = [{wert}] cm | Korrigiert = [{korregiert}] cm")
+    for i, (wert, speed) in enumerate(zip(entfernungen_Array, speed_Array), start=1):
+        print(f"Entfernung {i} = [{wert}] cm, Speed = [{speed}] cm/s")
  
-    print(f"Messungs Korrektru Faktor = [{messungsKorrekturFaktor}] cm")    
-    print(f"Erwartungswert = [{aritMittel}] cm")
-    print(f"Abweichung = [{stdAbweichung}] cm")
-    print(f"Geschwindigkeit = [{speed}] cm/s")
+    print(f"Ent_Erwartungswert = [{entfenungen_aritMittel}] cm")
+    print(f"Ent_StdAbweichung = [{entfernungen_stdAbweichung}] cm")
+    print(f"Ent_StdAbweichung des Mittelwerts = [{entfernungen_stdAbweichungDesMittelwerts}] cm")
+    
+    print(f"Speed_Erwartungswert = [{speed_aritMittel}] cm")
+    print(f"Speed_StdAbweichung = [{speed_stdAbweichung}] cm")
+    print(f"Speed_StdAbweichung des Mittelwerts = [{speed_stdAbweichungDesMittelwerts}] cm")    
+    
+    print(f"Messungs Korrektru Faktor = [{messungsKalibrierFaktor}] cm")  
     print(f"Temperatur = [{aktuelleTemperatur}] Celsius")
 
 ##############################################################################################################################################
 # 
 ##############################################################################################################################################
-def dumpCsv(durchlauf, messungs_Array, messungs_korregiert_Array, aritMittel, stdAbweichung, speed, messungsKorrekturFaktor, aktuelleTemperatur):
-    zeitStempel = hohleZeitstempel()
+def dumpCsv(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entfernungen_stdAbweichung, entfernungen_stdAbweichungDesMittelwerts,
+            speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, messungsKalibrierFaktor, aktuelleTemperatur):
+    
+    aktuellerZeitStempel, differenzZeitStempel = hohleZeitstempel()
+
     
     if durchlauf == 0:
-        print("DURCHLAUF; ZEIT_STEMPEL; " + 
-              "; ".join([f"MES{i+1}" for i in range(10)]) + "; " +
-              "; ".join([f"MES_KOR{i+1}" for i in range(10)]) + "; " +
-              "MESS_KOR_FAKTOR; ERWARTUNG; ABWEICHUNG; SPEED; TEMP")
-    
-    row = (
-        [durchlauf, zeitStempel] +
-        list(messungs_Array if messungs_Array else [None] * 10) +
-        list(messungs_korregiert_Array if messungs_korregiert_Array else [None] * 10) +
-        [messungsKorrekturFaktor, 
-         aritMittel,  
-         stdAbweichung,  
-         speed, aktuelleTemperatur]
-    )
-    
-    print("; ".join(map(str, row)))  # Verwende Semikolon als Trennzeichen
+        head = "DURCHLAUF; AKTUELLE_ZEIT; DIV_ZEIT; "
+        for i in range(len(entfernungen_Array)):
+            head += f"ENTFERNUNG_{i+1}; SPEED_{i+1}; "  # String-Interpolation mit f-String
+        head += "Ent_Erwartungswert; Ent_StdAbweichung; Ent_StdAbweichung; Speed_Erwartungswert; "
+        head += "Speed_StdAbweichung; Speed_StdAbweichung_Des_Mittelwerts; Messungs_Korrektur_Faktor; Temperatur"
+        print(head)
+
+    log = f"{durchlauf}; {aktuellerZeitStempel}; {differenzZeitStempel}; "
+    for i, (wert, speed) in enumerate(zip(entfernungen_Array, speed_Array), start=1):
+        log += (f"{wert} ;{speed}; ")
+        
+    log += f"{entfenungen_aritMittel}; {entfernungen_stdAbweichung};  {entfernungen_stdAbweichungDesMittelwerts}; "
+    log += f"{speed_aritMittel}; {speed_stdAbweichung};  {speed_stdAbweichungDesMittelwerts}; "
+    log += f"{messungsKalibrierFaktor}; {aktuelleTemperatur};"
+    print(log)
+
     
 ##########################################################################################################################################
 # 
@@ -92,4 +134,4 @@ def dumpInit(kalibrierungspunkte_User, kalPunktEins, messungsKorrekturFaktor):
     print(f"Berechnungsformel			= (x - y)")
     print(f"Der Kalibrierungsfaktor ist	= ({messungsKorrekturFaktor})")
     print(f"ENDE DUMP INITIALISIERUNG")
-    print(f"*****************************************************************************")
+
