@@ -43,15 +43,15 @@ def hohleZeitstempel():
 # 
 ##############################################################################################################################################
 def dump(dumpForm, durchlauf, entfernungen_Array, entfenungen_aritMittel, entfernungen_stdAbweichung, entfernungen_stdAbweichungDesMittelwerts,
-         speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, messungsKalibrierFaktor, aktuelleTemperatur) :
+         speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, speed_2Sigma, messungsKalibrierFaktor, aktuelleTemperatur) :
     
     if dumpForm == dumpCSV :
         dumpCsv(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entfernungen_stdAbweichung, entfernungen_stdAbweichungDesMittelwerts,
-                speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, messungsKalibrierFaktor, aktuelleTemperatur)
+                speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, speed_2Sigma, messungsKalibrierFaktor, aktuelleTemperatur)
     
     elif dumpForm == dumpHMI :
         dumpHmi(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entfernungen_stdAbweichung, entfernungen_stdAbweichungDesMittelwerts,
-                speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, messungsKalibrierFaktor, aktuelleTemperatur)
+                speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, speed_2Sigma, messungsKalibrierFaktor, aktuelleTemperatur)
     
     elif dumpForm == dumpNurSpeed :
         dumpJustSpeed(speed_Array)
@@ -65,7 +65,7 @@ def dumpJustSpeed(speed_Array) :
 # 
 ##############################################################################################################################################
 def dumpHmi(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entfernungen_stdAbweichung, entfernungen_stdAbweichungDesMittelwerts,
-            speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, messungsKalibrierFaktor, aktuelleTemperatur) :
+            speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, speed_2Sigma, messungsKalibrierFaktor, aktuelleTemperatur) :
     
     
     aktuellerZeitStempel, differenzZeitStempel = hohleZeitstempel()
@@ -81,7 +81,8 @@ def dumpHmi(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entf
     
     print(f"Speed_Erwartungswert = [{speed_aritMittel}] cm")
     print(f"Speed_StdAbweichung = [{speed_stdAbweichung}] cm")
-    print(f"Speed_StdAbweichung des Mittelwerts = [{speed_stdAbweichungDesMittelwerts}] cm")    
+    print(f"Speed_StdAbweichung des Mittelwerts = [{speed_stdAbweichungDesMittelwerts}] cm")
+    print(f"Speed_2Sigma = [{speed_2Sigma}] cm")     
     
     print(f"Messungs Korrektru Faktor = [{messungsKalibrierFaktor}] cm")  
     print(f"Temperatur = [{aktuelleTemperatur}] Celsius")
@@ -90,7 +91,7 @@ def dumpHmi(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entf
 # 
 ##############################################################################################################################################
 def dumpCsv(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entfernungen_stdAbweichung, entfernungen_stdAbweichungDesMittelwerts,
-            speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, messungsKalibrierFaktor, aktuelleTemperatur):
+            speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, speed_2Sigma, messungsKalibrierFaktor, aktuelleTemperatur):
     
     aktuellerZeitStempel, differenzZeitStempel = hohleZeitstempel()
 
@@ -99,8 +100,8 @@ def dumpCsv(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entf
         head = "DURCHLAUF; AKTUELLE_ZEIT; DIV_ZEIT; "
         for i in range(len(entfernungen_Array)):
             head += f"ENTFERNUNG_{i+1}; SPEED_{i+1}; "  # String-Interpolation mit f-String
-        head += "Ent_Erwartungswert; Ent_StdAbweichung; Ent_StdAbweichung; Speed_Erwartungswert; "
-        head += "Speed_StdAbweichung; Speed_StdAbweichung_Des_Mittelwerts; Messungs_Korrektur_Faktor; Temperatur"
+        head += "Ent_Erwartungswert; Ent_StdAbweichung; Ent_StdAbweichung_Des_Mittelwerts; Speed_Erwartungswert; "
+        head += "Speed_StdAbweichung; Speed_StdAbweichung_Des_Mittelwerts; Speed_2Sigma; Messungs_Korrektur_Faktor; Temperatur"
         print(head)
 
     log = f"{durchlauf}; {aktuellerZeitStempel}; {differenzZeitStempel}; "
@@ -108,7 +109,7 @@ def dumpCsv(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entf
         log += (f"{wert} ;{speed}; ")
         
     log += f"{entfenungen_aritMittel}; {entfernungen_stdAbweichung};  {entfernungen_stdAbweichungDesMittelwerts}; "
-    log += f"{speed_aritMittel}; {speed_stdAbweichung};  {speed_stdAbweichungDesMittelwerts}; "
+    log += f"{speed_aritMittel}; {speed_stdAbweichung};  {speed_stdAbweichungDesMittelwerts}; {speed_2Sigma}; "
     log += f"{messungsKalibrierFaktor}; {aktuelleTemperatur};"
     print(log)
 

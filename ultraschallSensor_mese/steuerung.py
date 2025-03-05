@@ -81,7 +81,7 @@ def getStandartAbweichungFromArray(varianzen_Array) :
 ##############################################################################################################################################
 def getSpeedArray(messungs_Array, t):
     speed_Array = []
-    speed_Array.append(0)
+    #speed_Array.append(0)
     for i in range(len(messungs_Array) - 1):
         speed = getSpeed(messungs_Array[i], messungs_Array[i + 1], t)
         speed_Array.append(speed)
@@ -92,6 +92,12 @@ def getSpeedArray(messungs_Array, t):
 ##############################################################################################################################################
 def getStandartAbweichungDesMittelwerts(stdAbweichung) :
     return stdAbweichung / (anzahlMessungenProSample ** 0.5)
+
+##############################################################################################################################################
+# 
+##############################################################################################################################################
+def get2SigmaFromStdAbweichung(myStdAbweichung) :
+    return myStdAbweichung * 2
 
 ##############################################################################################################################################
 ##############################################################################################################################################
@@ -114,11 +120,13 @@ def main():
         speed_varianzenArray						= getVarianzFromArray(speed_Array, speed_aritMittel)
         speed_stdAbweichung							= getStandartAbweichungFromArray(speed_varianzenArray)
         speed_stdAbweichungDesMittelwerts			= getStandartAbweichungDesMittelwerts(speed_stdAbweichung)
+        speed_2Sigma								= get2SigmaFromStdAbweichung(speed_stdAbweichung)
 
-
-        logger.dump(logger.dumpHMI, i,
+        speed_Array.insert(0, 0)
+        
+        logger.dump(logger.dumpCSV, i,
                     entfernungen_Array, entfenungen_aritMittel, entfernungen_stdAbweichung, entfernungen_stdAbweichungDesMittelwerts,
-                    speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts,
+                    speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, speed_2Sigma, 
                     init.getMessungsKalibrierFaktor(), aktuelleTemperatur)
         i += 1
         
