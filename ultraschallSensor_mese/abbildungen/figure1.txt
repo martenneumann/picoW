@@ -1,0 +1,90 @@
+@startuml
+interface       steuerung
+interface       logger
+interface       sensoren
+interface       init
+
+steuerung  --|> logger
+steuerung  --|> sensoren
+steuerung  <|--|> init
+
+init  --|> logger
+init  --|> sensoren
+
+interface steuerung {
+  .. oeffentliche Funktionen ..
+  getEntfernungsArray(AktuelleTemperatur)
+  getArithmetischesMittelFromArray(messungs_Array)
+  
+  .. globale Variablen ..
+  messungenNachXms
+  temperaturNachXmessungenErneuern
+  anzahlMessungenProSample
+  i 'Zähler für Messdurchläufe'
+  logStrategie
+  
+  .. private Funktionen ..
+  getEntfernungsArray(aktuelleTemperatur)
+  getEntfernungsDataFromMessung(aktuelleTemperatur)
+  getArithmetischesMittelFromArray(myArray)
+  getVarianzFromArray(myArray, aritMittel)
+  getStandartAbweichungFromArray(variant_Array)
+  getStandartAbweichungDesMittelwerts(stdAbweichung)
+  get2SigmaFromStdAbweichung(myStdAbweichung)
+  getSchallgeschwindigkeit(akruelleTemperatur)
+  getSpeedArray(messungs_Array, t)
+  getSpeed(d1, d2, t)
+  tonlaufzeit2Strecke(tonLaufzeit, aktuelleTemperatur)
+  main()
+}
+
+interface init {
+  .. oeffentliche Funktionen ..
+    initial()
+    getMessungsKalibrierFaktor()
+  
+  .. globale Variablen ..
+  messungsKalibrierFaktor
+
+  .. private Funktionen ..
+  kallibrierungsMessunt()
+  setMessungsKorekturFaktor(kalibrierungspunkt_nutzer)
+  getKallibrierungspunktFromUser()
+}
+
+interface logger {
+  .. oeffentliche Funktionen ..
+    setLoggerStartTime()
+    dump(log-list)
+
+  .. globale Variablen ..
+  START_TIME
+  LETZTER_ZEITSTEMPEL
+  dumpCSV
+  dumpHMI
+  dumpNurSpeed
+
+  .. private Funktionen ..
+  zeitStempelAusTicksDiff(t2, t1)
+  getZeitstempel
+  dumpJustSpeed(speed_Array)
+  dumpHmi(log-list)
+  dumpCsv(log-list)
+  dumpKalibrierungsMessungAlleWerte(messungs_Array)
+  dumpInit(Kalibrierungspunkte_User, kalPunktEins, messungsKorrekturFaktro)
+}
+
+interface sensoren {
+  .. oeffentliche Funktionen ..
+  getTonlaufzeit()
+  getTemperatur()
+  
+  .. globale Variablen ..
+  trigger
+  echo
+  tht11_sesor
+
+
+}
+
+@enduml
