@@ -29,7 +29,7 @@ def zeitStempelAusTicksDiff(t2, t1) :
 ##############################################################################################################################################
 # 
 ##############################################################################################################################################
-def hohleZeitstempel():
+def getZeitstempel():
     global LETZTER_ZEITSTEMPEL
     aktuellerZeitInUtime = utime.ticks_ms()
     
@@ -68,7 +68,7 @@ def dumpHmi(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entf
             speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, speed_2Sigma, messungsKalibrierFaktor, aktuelleTemperatur) :
     
     
-    aktuellerZeitStempel, differenzZeitStempel = hohleZeitstempel()
+    aktuellerZeitStempel, differenzZeitStempel = getZeitstempel()
     print("**********************************************************************************")
     print(f"Durchlauf = [{durchlauf}] || Zeitstempel = [{aktuellerZeitStempel}] || DiverenzZeit = [{differenzZeitStempel}]")
     
@@ -93,7 +93,7 @@ def dumpHmi(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entf
 def dumpCsv(dumpHMI, durchlauf, entfernungen_Array, entfenungen_aritMittel, entfernungen_stdAbweichung, entfernungen_stdAbweichungDesMittelwerts,
             speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, speed_2Sigma, messungsKalibrierFaktor, aktuelleTemperatur):
     
-    aktuellerZeitStempel, differenzZeitStempel = hohleZeitstempel()
+    aktuellerZeitStempel, differenzZeitStempel = getZeitstempel()
 
     
     if durchlauf == 0:

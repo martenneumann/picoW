@@ -20,9 +20,11 @@ def kallibrierungsMessung() :
 ##########################################################################################################################################
 # 
 ##########################################################################################################################################
-def getMessungsKorekturFaktor(kalibrierungspunkt_nutzer) :
+def setMessungsKorekturFaktor(kalibrierungspunkt_nutzer) :
+    global messungsKalibrierFaktor
     arithmetischesMittel_KalkPunkt = kallibrierungsMessung()
-    return float((kalibrierungspunkt_nutzer - arithmetischesMittel_KalkPunkt)), arithmetischesMittel_KalkPunkt
+    messungsKalibrierFaktor = float(kalibrierungspunkt_nutzer - arithmetischesMittel_KalkPunkt)
+    return arithmetischesMittel_KalkPunkt
         
 ##############################################################################################################################################
 # 
@@ -44,7 +46,7 @@ def getKallibrierungspunktFromUser() :
 def initial() :
     global messungsKalibrierFaktor
     kalibrierungspunkte_User = getKallibrierungspunktFromUser()
-    messungsKalibrierFaktor, aritMittelMessung = getMessungsKorekturFaktor(kalibrierungspunkte_User)
+    aritMittelMessung = setMessungsKorekturFaktor(kalibrierungspunkte_User)
     logger.dumpInit(kalibrierungspunkte_User, aritMittelMessung, messungsKalibrierFaktor)
     sleep(1)
     logger.setLoggerStartTime()

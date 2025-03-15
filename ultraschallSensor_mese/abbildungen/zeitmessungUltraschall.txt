@@ -1,0 +1,35 @@
+@startuml
+
+
+group inital
+    Pico -> Trigger: Low 2 Mikrosekunden
+    Pico -> Trigger: high 5 Mikrosekunden
+    Pico -> Trigger: Low Permanent
+end
+
+group Zeitmessung
+    group Ton gesendet
+        Pico -> Pico: Hohle Zeitstempel bis Ton gesendet wurde
+        Echo -> Sig : Ton wird gesendet
+        Echo -> Pico : high für Ton gesendet
+    end
+    group Ton empfangen
+        Pico -> Pico: Hohle Zeitstempel bis Echo empfangen wurde
+        Echo <- Sig : Ton wird Empfangen
+        Echo -> Pico : low für Ton empfangen
+    end
+end
+box "HC-SR04 " #LightBlue
+participant Trigger
+participant Echo
+end box
+
+box "Raspberry Pi Pico W " #LightGreen
+participant Pico
+
+end box
+
+
+
+@enduml
+

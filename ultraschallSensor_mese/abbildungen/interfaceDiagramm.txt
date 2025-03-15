@@ -1,4 +1,7 @@
 @startuml
+title Abhängigkeiter der  Interfaces
+footer Page %page% of %lastpage%
+
 interface       steuerung
 interface       logger
 interface       sensoren
@@ -17,7 +20,7 @@ interface steuerung {
   getArithmetischesMittelFromArray(messungs_Array)
   
   .. globale Variablen ..
-  messungenNachXms
+  temperaturMessungenNachXms
   temperaturNachXmessungenErneuern
   anzahlMessungenProSample
   i 'Zähler für Messdurchläufe'

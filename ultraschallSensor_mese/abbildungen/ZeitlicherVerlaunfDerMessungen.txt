@@ -1,0 +1,8 @@
+@startuml
+
+steuerung.py -> sensoren.py: Mache eine Abstandsmessungalle alle '**entfernungMessungNachXms=10**' Millisekunden
+steuerung.py -> logger.py: Logge nach '**entfernungMessungNachXms=10**' X '**anzahlMessungenProSample=10**' Millisekunden
+steuerung.py -> sensoren.py: Mache eine Temperaturmessung alle \n '**entfernungMessungNachXms=10**' X '**anzahlMessungenProSample=10**' X '**temperaturNachXsampleErneuern=10**' Millisekunden
+
+@enduml
+

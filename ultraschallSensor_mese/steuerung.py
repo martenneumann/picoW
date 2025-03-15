@@ -6,9 +6,10 @@ import sensoren
 import logger
 
 ##############################################################################################################################################
-messungNachXms						= 10   # Millisekunden
-temperaturNachXmessungenErneuern	= 10
-anzahlMessungenProSample			= 10
+entfernungMessungNachXms			= 10					# Millisekunden
+temperaturNachXsampleErneuern		= 10					# Millisekunden
+anzahlMessungenProSample			= 10					# Millisekunden
+logStrategie						= logger.dumpCSV
 i									= 0
 
 ##############################################################################################################################################
@@ -71,7 +72,7 @@ def getEntfernungsArray(aktuelleTemperatur) :
     for y in range(anzahlMessungenProSample) :
         myMessung = getEntfernungsDataFromMessung(aktuelleTemperatur)
         messungs_Array.append(myMessung)
-        sleep_ms(messungNachXms)
+        sleep_ms(entfernungMessungNachXms)
     return messungs_Array
 
 ##############################################################################################################################################
@@ -96,10 +97,10 @@ def getSpeedArray(messungs_Array, t):
 ##############################################################################################################################################
 ##############################################################################################################################################
 def main():
-    global i, messungs_Array, sleepTime
+    global i, messungs_Array, sleepTime, logStrategie
     while True :
 
-        if i % temperaturNachXmessungenErneuern == 0 : aktuelleTemperatur = sensoren.getTemperatur()
+        if i % temperaturNachXsampleErneuern == 0 : aktuelleTemperatur = sensoren.getTemperatur()
         
         # Entfernungen
         entfernungen_Array							= getEntfernungsArray(aktuelleTemperatur)
@@ -109,7 +110,7 @@ def main():
         entfernungen_stdAbweichungDesMittelwerts	= getStandartAbweichungDesMittelwerts(entfernungen_stdAbweichung)
         
         # Geschwindigkeiten
-        speed_Array									= getSpeedArray(entfernungen_Array, messungNachXms)
+        speed_Array									= getSpeedArray(entfernungen_Array, entfernungMessungNachXms)
         speed_aritMittel							= getArithmetischesMittelFromArray(speed_Array)
         speed_varianzenArray						= getVarianzFromArray(speed_Array, speed_aritMittel)
         speed_stdAbweichung							= getStandartAbweichungFromArray(speed_varianzenArray)
@@ -118,7 +119,7 @@ def main():
 
         speed_Array.insert(0, 0)
 
-        logger.dump(logger.dumpCSV, i,
+        logger.dump(logStrategie, i,
                     entfernungen_Array, entfenungen_aritMittel, entfernungen_stdAbweichung, entfernungen_stdAbweichungDesMittelwerts,
                     speed_Array, speed_aritMittel, speed_stdAbweichung, speed_stdAbweichungDesMittelwerts, speed_2Sigma, 
                     init.getMessungsKalibrierFaktor(), aktuelleTemperatur)
